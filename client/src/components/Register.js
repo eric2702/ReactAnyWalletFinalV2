@@ -1,7 +1,9 @@
-import React, { Fragment, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-// import "../css/register.css";
+import "../css/register.css";
+
+const axios = require("axios")
 
 const Register = ({ setAuth }) => {
   const [inputs, setInputs] = useState({
@@ -23,13 +25,10 @@ const Register = ({ setAuth }) => {
     const body = { email, password, confirmPassword, name };
 
     try {
-      const response = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(body),
-      });
 
-      const parseRes = await response.json();
+      const response = await axios.post("http://localhost:5000/auth/register", body)
+
+      const parseRes = response.data
 
       if (parseRes.token) {
         localStorage.setItem("token", parseRes.token);
@@ -44,37 +43,7 @@ const Register = ({ setAuth }) => {
     }
   };
   return (
-    // <Fragment>
-    /* <h1 className="text-center my-5">Register</h1>
-      <form onSubmit={onSubmitForm}>
-        <input
-          type="email"
-          name="email"
-          placeholder="email"
-          className="form-control my-3"
-          value={email}
-          onChange={(e) => onChange(e)}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          className="form-control my-3"
-          value={password}
-          onChange={(e) => onChange(e)}
-        />
-        <input
-          type="text"
-          name="name"
-          placeholder="name"
-          className="form-control my-3"
-          value={name}
-          onChange={(e) => onChange(e)}
-        />
-        <button className="btn btn-success btn-block">Submit</button>
-      </form>
-      <Link to="/login">login</Link> */
-      <div class="container">
+      <div class="container-fluid register">
         <div class="row">
           <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="card card-signin my-5">
@@ -137,11 +106,6 @@ const Register = ({ setAuth }) => {
                     />
                     <label for="inputName">Name</label>
                   </div>
-
-                  {/* <div class="custom-control custom-checkbox mb-3">
-                      <input type="checkbox" class="custom-control-input" id="customCheck1">
-                      <label class="custom-control-label" for="customCheck1">Remember password</label>
-                    </div> */}
                   <button
                     class="btn btn-lg btn-primary btn-block text-uppercase"
                     type="submit"
@@ -163,7 +127,6 @@ const Register = ({ setAuth }) => {
           </div>
         </div>
       </div>
-    // </Fragment>
   );
 };
 

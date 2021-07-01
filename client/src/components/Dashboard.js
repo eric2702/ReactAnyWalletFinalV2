@@ -7,18 +7,13 @@ const Dashboard = ({ setAuth }) => {
 
   async function getName() {
     try {
-      const response = await fetch("http://localhost:5000/dashboard/", {
-        method: "GET",
-        headers: { token: localStorage.token },
+      const response = await axios.get("http://localhost:5000/dashboard/", {
+        headers: {
+          'token': localStorage.token,
+        },
       });
 
-      // const response = await axios.get("https://localhost:5000/dashboard/", {
-      //   headers: {
-      //     'token': localStorage.token,
-      //   },
-      // });
-
-      const parseRes = await response.json();
+      const parseRes = response.data
 
       setName(parseRes.name);
     } catch (err) {

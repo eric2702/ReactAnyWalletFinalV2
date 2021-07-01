@@ -1,8 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
-import "./App.css";
 
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
@@ -14,28 +12,10 @@ import Register from "./components/Register";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useLocation } from 'react-router-dom'
-import './css/login.css'
-
-
-
 
 toast.configure();
 
 function App() {
-  const location = useLocation()
-  console.log(location)
-  // const loginClass = location.pathname === "/login" ? "login" : "register";
-  let loginClass = ""
-  if (location.pathname === "/login") {
-    loginClass = "login"
-  } else if (location.pathname === "/register") {
-    loginClass = "register"
-  } else {
-    loginClass = "dashboard"
-  }
-  // const registerClass = location.pathname.match(/^\/register/) ? "register" : "";
-  // const contactClass = location.pathname.match(/^\/contact/) ? "active" : "";
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -63,7 +43,7 @@ function App() {
 
   return (
     <Fragment>
-        <div className={`${loginClass}`}>
+        <div>
           <Switch>
             <Route
               exact

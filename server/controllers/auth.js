@@ -7,7 +7,6 @@ exports.postRegister = async (req, res, next) => {
     const { name, email, password, confirmPassword } = req.body;
     if (password != confirmPassword) {
       return res
-        .status(401)
         .json("Password and Confirm Password does NOT match!");
     }
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
@@ -15,7 +14,7 @@ exports.postRegister = async (req, res, next) => {
     ]);
 
     if (user.rows.length != 0) {
-      return res.status(401).json("User Already Exists");
+      return res.json("User Already Exists");
     }
 
     const saltRound = 10;
@@ -44,13 +43,13 @@ exports.postLogin = async (req, res, next) => {
     ]);
 
     if (user.rows.length === 0) {
-      return res.status(401).json("Password or Email is incorrect");
+      return res.json("Password or Email is incorrect");
     }
 
     const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
     if (!validPassword) {
-      return res.status(401).json("Password or Email is incorrect");
+      return res.json("Password or Email is incorrect");
     }
 
     const token = jwtGenerator(user.rows[0].user_id);
