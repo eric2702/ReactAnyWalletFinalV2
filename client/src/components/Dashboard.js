@@ -9,11 +9,11 @@ const Dashboard = ({ setAuth }) => {
     try {
       const response = await axios.get("http://localhost:5000/dashboard/", {
         headers: {
-          'token': localStorage.token,
+          token: localStorage.token,
         },
       });
 
-      const parseRes = response.data
+      const parseRes = response.data;
 
       setName(parseRes.name);
     } catch (err) {

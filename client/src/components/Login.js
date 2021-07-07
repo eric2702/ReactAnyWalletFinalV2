@@ -5,8 +5,7 @@ import { toast } from "react-toastify";
 
 import "../css/login.css";
 
-const axios = require("axios")
-
+const axios = require("axios");
 
 const Login = ({ setAuth }) => {
   const [inputs, setInputs] = useState({
@@ -22,11 +21,14 @@ const Login = ({ setAuth }) => {
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      const body = { email, password};
+      const body = { email, password };
 
-      const response = await axios.post("http://localhost:5000/auth/login", body)
+      const response = await axios.post(
+        "http://localhost:5000/auth/login",
+        body
+      );
 
-      const parseRes = response.data
+      const parseRes = response.data;
       if (parseRes.token) {
         localStorage.setItem("token", parseRes.token);
         setAuth(true);
