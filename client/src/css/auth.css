@@ -9,6 +9,11 @@
   height: 100vh;
 }
 
+.register {
+  background: red;
+  height: 100vh;
+}
+
 .card-signin {
   border: 0;
   border-radius: 1rem;

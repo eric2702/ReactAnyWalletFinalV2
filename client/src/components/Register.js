@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import "../css/register.css";
+import "../css/auth.css";
 
 const axios = require("axios");
 
