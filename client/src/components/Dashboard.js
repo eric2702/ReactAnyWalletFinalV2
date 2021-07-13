@@ -1,8 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { authActions } from "../store/auth";
 const axios = require("axios");
 
-const Dashboard = ({ setAuth }) => {
+const Dashboard = () => {
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+  };
   const [name, setName] = useState("");
 
   async function getName() {
@@ -24,7 +30,7 @@ const Dashboard = ({ setAuth }) => {
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
-    setAuth(false);
+    logoutHandler();
     toast.error("Logged out successfully");
   };
 

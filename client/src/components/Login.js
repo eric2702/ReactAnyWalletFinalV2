@@ -1,13 +1,22 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
 import "../css/auth.css";
+import { authActions } from "../store/auth";
 
 const axios = require("axios");
 
-const Login = ({ setAuth }) => {
+const Login = () => {
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+  };
+  const loginHandler = () => {
+    dispatch(authActions.login());
+  };
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -31,10 +40,10 @@ const Login = ({ setAuth }) => {
       const parseRes = response.data;
       if (parseRes.token) {
         localStorage.setItem("token", parseRes.token);
-        setAuth(true);
+        loginHandler();
         toast.success("Logged in Successfully");
       } else {
-        setAuth(false);
+        logoutHandler();
         toast.error(parseRes);
       }
     } catch (err) {

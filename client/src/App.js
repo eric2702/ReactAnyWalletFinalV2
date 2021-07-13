@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useEffect, Suspense } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
@@ -9,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./css/loading.css";
 
 import Loading from "./components/Loading";
+import { authActions } from "./store/auth";
 
 const axios = require("axios");
 
@@ -19,13 +21,16 @@ const Login = React.lazy(() => import("./components/Login"));
 const Register = React.lazy(() => import("./components/Register"));
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const setAuth = (boolean) => {
-    setIsAuthenticated(boolean);
+  const dispatch = useDispatch();
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+  };
+  const loginHandler = () => {
+    dispatch(authActions.login());
   };
 
-  async function isAuth() {
+  async function isAuthEffect() {
     try {
       const response = await axios.get("http://localhost:5000/auth/is-verify", {
         headers: {
@@ -34,14 +39,14 @@ function App() {
       });
 
       const parseRes = response.data;
-      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+      parseRes === true ? loginHandler() : logoutHandler();
     } catch (err) {
       console.error(err.message);
     }
   }
 
   useEffect(() => {
-    isAuth();
+    isAuthEffect();
   });
 
   return (
@@ -51,34 +56,18 @@ function App() {
           exact
           path="/register"
           component={() =>
-            !isAuthenticated ? (
-              <Register setAuth={setAuth} />
-            ) : (
-              <Redirect to="/dashboard" />
-            )
+            !isAuth ? <Register /> : <Redirect to="/dashboard" />
           }
         />
         <Route
           exact
           path="/login"
-          component={() =>
-            !isAuthenticated ? (
-              <Login setAuth={setAuth} />
-            ) : (
-              <Redirect to="/dashboard" />
-            )
-          }
+          component={() => (!isAuth ? <Login /> : <Redirect to="/dashboard" />)}
         />
         <Route
           exact
           path="/dashboard"
-          component={() =>
-            isAuthenticated ? (
-              <Dashboard setAuth={setAuth} />
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
+          component={() => (isAuth ? <Dashboard /> : <Redirect to="/login" />)}
         />
       </Switch>
     </Suspense>
