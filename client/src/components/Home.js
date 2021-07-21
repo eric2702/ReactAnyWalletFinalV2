@@ -5,11 +5,7 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <header
-        data-aos="fade-right"
-        data-aos-anchor-placement="center-bottom"
-        class="masthead text-center text-white"
-      >
+      <header data-aos="fade-right" class="masthead text-center text-white">
         <div class="masthead-content">
           <div class="container">
             <h1 class="masthead-heading mb-0">AnyWallet</h1>
