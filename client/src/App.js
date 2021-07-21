@@ -11,6 +11,8 @@ import "./css/loading.css";
 
 import Loading from "./components/Loading";
 import { authActions } from "./store/auth";
+import Home from "./components/Home";
+import AOS from "aos";
 
 const axios = require("axios");
 
@@ -49,9 +51,14 @@ function App() {
     isAuthEffect();
   });
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
   return (
     <Suspense fallback={<Loading />}>
       <Switch>
+        <Route exact path="/" component={() => <Home />} />
         <Route
           exact
           path="/register"

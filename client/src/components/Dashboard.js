@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { authActions } from "../store/auth";
@@ -38,12 +38,12 @@ const Dashboard = () => {
     getName();
   }, []);
   return (
-    <Fragment>
+    <div data-aos="fade-right">
       <h1>Dashboard {name}</h1>
       <button className="btn btn-primary" onClick={(e) => logout(e)}>
         Logout
       </button>
-    </Fragment>
+    </div>
   );
 };
 
