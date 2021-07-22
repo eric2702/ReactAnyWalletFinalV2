@@ -4,27 +4,45 @@ import { toast } from "react-toastify";
 import { authActions } from "../store/auth";
 const axios = require("axios");
 
-//test
 const Dashboard = () => {
   const dispatch = useDispatch();
   const logoutHandler = () => {
     dispatch(authActions.logout());
   };
   const [name, setName] = useState("");
-  const [transactions, setTransaction] = useState([
-    {
-      id: 1,
-      details: "Gaji",
-      category: "income",
-      nominal: 6000000,
-    },
-  ]);
+  const [date, setDate] = useState("");
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  var days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const [transactions, setTransaction] = useState([{}]);
 
   const [formData, setFormData] = useState({
     details: "",
-    category: "",
+    category_id: "",
     nominal: "",
   });
+
+  const { details, category_id, nominal } = formData;
 
   function handleChange(e) {
     let data = { ...formData };
@@ -39,11 +57,10 @@ const Dashboard = () => {
     data.push({
       id: 1,
       details: formData.details,
-      category: formData.category,
+      category_id: formData.category_id,
       nominal: formData.nominal,
     });
     setTransaction(data);
-    setFormData({ details: "", category: "", nominal: "" });
   }
 
   async function getName() {
@@ -62,6 +79,100 @@ const Dashboard = () => {
     }
   }
 
+  async function getTransaction() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/dashboard/get_trans",
+        {
+          headers: {
+            token: localStorage.token,
+          },
+        }
+      );
+
+      const parseRes = response.data;
+
+      setTransaction(parseRes);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  async function getDate() {
+    try {
+      let dateNow = new Date();
+      let now =
+        days[dateNow.getDay()] +
+        ", " +
+        dateNow.getDate().toString() +
+        " " +
+        monthNames[dateNow.getMonth()] +
+        " " +
+        dateNow.getFullYear().toString();
+      setDate(now);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  const onSubmitTransaction = async (e) => {
+    e.preventDefault();
+
+    const responseUserId = await axios.get(
+      "http://localhost:5000/dashboard/user_id",
+      {
+        headers: {
+          token: localStorage.token,
+        },
+      }
+    );
+
+    const user_id = responseUserId.data;
+    const body = { details, nominal, category_id, user_id };
+    body.category_id = parseInt(category_id);
+    body.nominal = parseInt(nominal);
+    console.log(body);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/dashboard/",
+        body,
+        {
+          headers: {
+            token: localStorage.token,
+          },
+        }
+      );
+
+      const parseRes = response.data;
+      console.log(response.data);
+
+      if (parseRes == "error_nominal") {
+        toast.error("Masukkan Nominal Lebih dari 0!");
+      } else if (parseRes == "error_data_type") {
+        toast.error("Masukkan Data yang Benar!");
+      } else {
+        toast.success("Transaction Added Successfully!");
+        setFormData({ details: "", category_id: "", nominal: "" });
+        e.preventDefault();
+
+        const responseTransaction = await axios.get(
+          "http://localhost:5000/dashboard/get_trans",
+          {
+            headers: {
+              token: localStorage.token,
+            },
+          }
+        );
+        console.log(responseTransaction);
+        const parseResTrans = responseTransaction.data;
+        setTransaction(parseResTrans);
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
@@ -71,15 +182,51 @@ const Dashboard = () => {
 
   useEffect(() => {
     getName();
+    getTransaction();
+    getDate();
   }, []);
   return (
+    //AMOUNT
     <div>
       <h1>Dashboard {name}</h1>
+      <button className="btn btn-primary" onClick={(e) => logout(e)}>
+        Logout
+      </button>
+      <div className="container mt-5">
+        <div className="row">
+          <div className="col-sm-1"></div>
+          <div className="col-sm-3">
+            <div className="card">
+              <div className="card-body text-primary">
+                <h5 className="card-title">Balance</h5>
+                <p className="card-text">RP 3.000.000</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-3">
+            <div className="card">
+              <div className="card-body text-success">
+                <h5 className="card-title">Income</h5>
+                <p className="card-text">Rp 5.000.000</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-3">
+            <div className="card">
+              <div className="card-body text-danger">
+                <h5 className="card-title">Expense</h5>
+                <p className="card-text">RP 2.000.000</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* TRANSACTIONS */}
       <div className="container mt-5">
         <div className="row">
           <div className="col-sm-1"></div>
           <div className="col-sm-4">
-            <p>28 Juli 2021</p>
+            <p style={{ fontWeight: "bold" }}>{date}</p>
           </div>
           <div className="col-sm-3"></div>
           <div className="col-sm-3">
@@ -101,7 +248,7 @@ const Dashboard = () => {
               aria-hidden="true"
             >
               <div className="modal-dialog modal-lg">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={onSubmitTransaction}>
                   <div className="modal-content">
                     <div className="modal-header">
                       <h5 className="modal-title" id="staticBackdropLabel">
@@ -116,9 +263,7 @@ const Dashboard = () => {
                               <p className="card-title small font-weight-light m-0">
                                 Wallet
                               </p>
-                              <span className="font-weight-bolder">
-                                UserName
-                              </span>
+                              <span className="font-weight-bolder">{name}</span>
                             </div>
                           </div>
                         </div>
@@ -129,16 +274,29 @@ const Dashboard = () => {
                                 Category
                               </p>
                               <div class="input-group input-group-sm m-0">
-                                <input
-                                  type="text"
-                                  name="category"
+                                {/* <input
+                                  type="number"
+                                  name="category_id"
                                   className="form-control border-0"
                                   aria-label="Sizing example input"
                                   aria-describedby="inputGroup-sizing-sm"
                                   placeholder="input category"
-                                  value={formData.category}
+                                  value={formData.category_id}
                                   onChange={handleChange}
-                                />
+                                /> */}
+                                <select
+                                  class="form-control"
+                                  id="exampleFormControlSelect1"
+                                  name="category_id"
+                                  aria-label="Sizing example input"
+                                  aria-describedby="inputGroup-sizing-sm"
+                                  value={formData.category_id}
+                                  onChange={handleChange}
+                                >
+                                  <option value="0">Select Category</option>
+                                  <option value="1">Income</option>
+                                  <option value="2">Expense</option>
+                                </select>
                               </div>
                             </div>
                           </div>
@@ -151,7 +309,7 @@ const Dashboard = () => {
                               </p>
                               <div className="input-group input-group-sm m-0">
                                 <input
-                                  type="text"
+                                  type="number"
                                   name="nominal"
                                   className="form-control border-0"
                                   aria-label="Sizing example input"
@@ -172,9 +330,7 @@ const Dashboard = () => {
                               <p className="card-title small font-weight-light m-0">
                                 Date
                               </p>
-                              <span className="font-weight-bolder">
-                                28 Juli 2021
-                              </span>
+                              <span className="font-weight-bolder">{date}</span>
                             </div>
                           </div>
                         </div>
@@ -223,20 +379,20 @@ const Dashboard = () => {
           <table className="table table-bordered" id="dataTable" width="100%">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Details</th>
                 <th>Nominal</th>
                 <th>Category</th>
+                <th>Date & Time</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((transaction, index) => (
                 <tr key={index}>
-                  <td>{transaction.id}</td>
                   <td>{transaction.details}</td>
                   <td>{transaction.nominal}</td>
-                  <td>{transaction.category}</td>
+                  <td>{transaction.category_name}</td>
+                  <td>{transaction.date_created_updated}</td>
                   <td>
                     <button className="btn btn-warning btn-circle btn-sm m-0">
                       Edit
@@ -251,9 +407,6 @@ const Dashboard = () => {
           </table>
         </div>
       </div>
-      <button className="btn btn-primary" onClick={(e) => logout(e)}>
-        Logout
-      </button>
     </div>
   );
 };
