@@ -46,7 +46,7 @@ exports.getTransaction = async (req, res, next) => {
       "SELECT details, nominal, c.category_name, to_char(date_created_updated, 'Day, dd Month yyyy, hh24:mi') as date_created_updated FROM transactions t JOIN categories c on (t.category_id = c.category_id) WHERE user_id = $1",
       [req.user]
     );
-    console.log(transactions.rows);
+
     res.json(transactions.rows);
   } catch (err) {
     console.log(err.message);

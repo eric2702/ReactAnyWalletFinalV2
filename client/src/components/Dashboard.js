@@ -35,6 +35,7 @@ const Dashboard = () => {
     "Saturday",
   ];
   const [transactions, setTransaction] = useState([{}]);
+  const [amount, setAmount] = useState({});
 
   const [formData, setFormData] = useState({
     details: "",
@@ -44,23 +45,21 @@ const Dashboard = () => {
 
   const { details, category_id, nominal } = formData;
 
+  function formatRupiah(numb) {
+    try {
+      const format = numb.toString().split("").reverse().join("");
+      const convert = format.match(/\d{1,3}/g);
+      const rupiah = "Rp " + convert.join(".").split("").reverse().join("");
+      return rupiah;
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   function handleChange(e) {
     let data = { ...formData };
     data[e.target.name] = e.target.value;
     setFormData(data);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    let data = [...transactions];
-    data.push({
-      id: 1,
-      details: formData.details,
-      category_id: formData.category_id,
-      nominal: formData.nominal,
-    });
-    setTransaction(data);
   }
 
   async function getName() {
@@ -93,6 +92,22 @@ const Dashboard = () => {
       const parseRes = response.data;
 
       setTransaction(parseRes);
+      let income = 0;
+      let expense = 0;
+      for (let i = 0; i < parseRes.length; i++) {
+        if (parseRes[i].category_name === "Income") {
+          income = income + parseInt(parseRes[i].nominal);
+        } else if (parseRes[i].category_name === "Expense") {
+          expense = expense + parseInt(parseRes[i].nominal);
+        }
+      }
+      let balance = income - expense;
+
+      setAmount({
+        balance: formatRupiah(balance),
+        income: formatRupiah(income),
+        expense: formatRupiah(expense),
+      });
     } catch (err) {
       console.error(err.message);
     }
@@ -131,7 +146,6 @@ const Dashboard = () => {
     const body = { details, nominal, category_id, user_id };
     body.category_id = parseInt(category_id);
     body.nominal = parseInt(nominal);
-    console.log(body);
 
     try {
       const response = await axios.post(
@@ -145,28 +159,16 @@ const Dashboard = () => {
       );
 
       const parseRes = response.data;
-      console.log(response.data);
 
-      if (parseRes == "error_nominal") {
+      if (parseRes === "error_nominal") {
         toast.error("Masukkan Nominal Lebih dari 0!");
-      } else if (parseRes == "error_data_type") {
+      } else if (parseRes === "error_data_type") {
         toast.error("Masukkan Data yang Benar!");
       } else {
         toast.success("Transaction Added Successfully!");
         setFormData({ details: "", category_id: "", nominal: "" });
         e.preventDefault();
-
-        const responseTransaction = await axios.get(
-          "http://localhost:5000/dashboard/get_trans",
-          {
-            headers: {
-              token: localStorage.token,
-            },
-          }
-        );
-        console.log(responseTransaction);
-        const parseResTrans = responseTransaction.data;
-        setTransaction(parseResTrans);
+        getTransaction();
       }
     } catch (err) {
       console.log(err.message);
@@ -199,7 +201,7 @@ const Dashboard = () => {
             <div className="card">
               <div className="card-body text-primary">
                 <h5 className="card-title">Balance</h5>
-                <p className="card-text">RP 3.000.000</p>
+                <p className="card-text">{amount.balance}</p>
               </div>
             </div>
           </div>
@@ -207,7 +209,7 @@ const Dashboard = () => {
             <div className="card">
               <div className="card-body text-success">
                 <h5 className="card-title">Income</h5>
-                <p className="card-text">Rp 5.000.000</p>
+                <p className="card-text">{amount.income}</p>
               </div>
             </div>
           </div>
@@ -215,7 +217,7 @@ const Dashboard = () => {
             <div className="card">
               <div className="card-body text-danger">
                 <h5 className="card-title">Expense</h5>
-                <p className="card-text">RP 2.000.000</p>
+                <p className="card-text">{amount.expense}</p>
               </div>
             </div>
           </div>
@@ -390,7 +392,7 @@ const Dashboard = () => {
               {transactions.map((transaction, index) => (
                 <tr key={index}>
                   <td>{transaction.details}</td>
-                  <td>{transaction.nominal}</td>
+                  <td>{formatRupiah(transaction.nominal)}</td>
                   <td>{transaction.category_name}</td>
                   <td>{transaction.date_created_updated}</td>
                   <td>
