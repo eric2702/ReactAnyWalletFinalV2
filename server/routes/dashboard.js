@@ -6,5 +6,10 @@ router.get("/", authorization, dashboardController.getRoot);
 router.post("/", authorization, dashboardController.postTransaction);
 router.get("/user_id", authorization, dashboardController.getUserId);
 router.get("/get_trans", authorization, dashboardController.getTransaction);
+router.get(
+  "/del_trans/:transaction_id",
+  authorization,
+  dashboardController.postDelete
+);
 
 module.exports = router;

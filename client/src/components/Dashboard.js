@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { authActions } from "../store/auth";
+import { Link } from "react-router-dom";
 const axios = require("axios");
 
 const Dashboard = () => {
@@ -49,7 +50,12 @@ const Dashboard = () => {
     try {
       const format = numb.toString().split("").reverse().join("");
       const convert = format.match(/\d{1,3}/g);
-      const rupiah = "Rp " + convert.join(".").split("").reverse().join("");
+      let rupiah;
+      if (numb >= 0) {
+        rupiah = "Rp " + convert.join(".").split("").reverse().join("");
+      } else {
+        rupiah = "Rp -" + convert.join(".").split("").reverse().join("");
+      }
       return rupiah;
     } catch (err) {
       console.error(err.message);
@@ -110,6 +116,27 @@ const Dashboard = () => {
       });
     } catch (err) {
       console.error(err.message);
+    }
+  }
+
+  async function deleteTransaction(e) {
+    try {
+      let url_delete =
+        "http://localhost:5000/dashboard/del_trans/" + e.target.value;
+      const response = await axios.get(url_delete, {
+        headers: {
+          token: localStorage.token,
+        },
+      });
+      let parseRes = response.data;
+      if (parseRes === "error_id") {
+        toast.error("Delete failed!");
+      }
+      toast.success("Transaction Deleted Successfully!");
+      getTransaction();
+    } catch (err) {
+      console.error(err.message);
+      toast.error("Server Error");
     }
   }
 
@@ -399,7 +426,11 @@ const Dashboard = () => {
                     <button className="btn btn-warning btn-circle btn-sm m-0">
                       Edit
                     </button>
-                    <button className="btn btn-danger btn-circle btn-sm mx-2">
+                    <button
+                      value={transaction.transaction_id}
+                      onClick={(e) => deleteTransaction(e, "value")}
+                      className="btn btn-danger btn-circle btn-sm mx-2"
+                    >
                       Del
                     </button>
                   </td>
