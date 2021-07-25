@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { authActions } from "../store/auth";
-import { Link } from "react-router-dom";
 const axios = require("axios");
 
 const Dashboard = () => {
@@ -190,7 +189,7 @@ const Dashboard = () => {
       if (parseRes === "error_nominal") {
         toast.error("Masukkan Nominal Lebih dari 0!");
       } else if (parseRes === "error_data_type") {
-        toast.error("Masukkan Data yang Benar!");
+        toast.error("Masukkan Data dengan Lengkap!");
       } else {
         toast.success("Transaction Added Successfully!");
         setFormData({ details: "", category_id: "", nominal: "" });
@@ -343,7 +342,7 @@ const Dashboard = () => {
                                   className="form-control border-0"
                                   aria-label="Sizing example input"
                                   aria-describedby="inputGroup-sizing-sm"
-                                  placeholder="0"
+                                  placeholder="Isi Nominal Transaksi"
                                   value={formData.nominal}
                                   onChange={handleChange}
                                 />
@@ -376,7 +375,7 @@ const Dashboard = () => {
                                   className="form-control border-0"
                                   aria-label="Sizing example input"
                                   aria-describedby="inputGroup-sizing-sm"
-                                  placeholder="Isi Details Transaction"
+                                  placeholder="Isi Details Transaksi"
                                   value={formData.details}
                                   onChange={handleChange}
                                 />
@@ -428,7 +427,14 @@ const Dashboard = () => {
                     </button>
                     <button
                       value={transaction.transaction_id}
-                      onClick={(e) => deleteTransaction(e, "value")}
+                      onClick={(e) => {
+                        if (
+                          window.confirm(
+                            "Are you sure you wish to delete this transaction?"
+                          )
+                        )
+                          deleteTransaction(e, "value");
+                      }}
                       className="btn btn-danger btn-circle btn-sm mx-2"
                     >
                       Del
