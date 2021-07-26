@@ -10,7 +10,7 @@ const Dashboard = () => {
     dispatch(authActions.logout());
   };
   const [name, setName] = useState("");
-  const [date, setDate] = useState("");
+  const [dateString, setDateString] = useState("");
   const monthNames = [
     "January",
     "February",
@@ -34,16 +34,17 @@ const Dashboard = () => {
     "Friday",
     "Saturday",
   ];
-  const [transactions, setTransaction] = useState([{}]);
+  const [transactions, setTransactions] = useState([{}]);
   const [amount, setAmount] = useState({});
 
   const [formData, setFormData] = useState({
     details: "",
     category_id: "",
     nominal: "",
+    date_created_updated: "",
   });
 
-  const { details, category_id, nominal } = formData;
+  const { details, category_id, nominal, date_created_updated } = formData;
 
   function formatRupiah(numb) {
     try {
@@ -96,7 +97,7 @@ const Dashboard = () => {
 
       const parseRes = response.data;
 
-      setTransaction(parseRes);
+      setTransactions(parseRes);
       let income = 0;
       let expense = 0;
       for (let i = 0; i < parseRes.length; i++) {
@@ -139,7 +140,7 @@ const Dashboard = () => {
     }
   }
 
-  async function getDate() {
+  async function getDateString() {
     try {
       let dateNow = new Date();
       let now =
@@ -150,7 +151,7 @@ const Dashboard = () => {
         monthNames[dateNow.getMonth()] +
         " " +
         dateNow.getFullYear().toString();
-      setDate(now);
+      setDateString(now);
     } catch (err) {
       console.error(err.message);
     }
@@ -169,7 +170,13 @@ const Dashboard = () => {
     );
 
     const user_id = responseUserId.data;
-    const body = { details, nominal, category_id, user_id };
+    const body = {
+      details,
+      nominal,
+      category_id,
+      user_id,
+      date_created_updated,
+    };
     body.category_id = parseInt(category_id);
     body.nominal = parseInt(nominal);
 
@@ -192,7 +199,12 @@ const Dashboard = () => {
         toast.error("Masukkan Data dengan Lengkap!");
       } else {
         toast.success("Transaction Added Successfully!");
-        setFormData({ details: "", category_id: "", nominal: "" });
+        setFormData({
+          details: "",
+          category_id: "",
+          nominal: "",
+          date_created_updated: "",
+        });
         e.preventDefault();
         getTransaction();
       }
@@ -211,12 +223,12 @@ const Dashboard = () => {
   useEffect(() => {
     getName();
     getTransaction();
-    getDate();
+    getDateString();
   }, []);
   return (
     //AMOUNT
     <div>
-      <h1>Dashboard {name}</h1>
+      <h1 className="d-flex">Dashboard {name}</h1>
       <button className="btn btn-primary" onClick={(e) => logout(e)}>
         Logout
       </button>
@@ -254,7 +266,7 @@ const Dashboard = () => {
         <div className="row">
           <div className="col-sm-1"></div>
           <div className="col-sm-4">
-            <p style={{ fontWeight: "bold" }}>{date}</p>
+            <p style={{ fontWeight: "bold" }}>{dateString}</p>
           </div>
           <div className="col-sm-3"></div>
           <div className="col-sm-3">
@@ -352,17 +364,24 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div class="row mt-4">
-                        <div className="col-4">
+                        <div className="col-5">
                           <div className="card">
                             <div className="mx-3 my-2">
                               <p className="card-title small font-weight-light m-0">
                                 Date
                               </p>
-                              <span className="font-weight-bolder">{date}</span>
+                              {/* <span className="font-weight-bolder">{dateString}</span> */}
+                              <input
+                                type="datetime-local"
+                                name="date_created_updated"
+                                className="form-control"
+                                value={formData.date_created_updated}
+                                onChange={handleChange}
+                              />
                             </div>
                           </div>
                         </div>
-                        <div className="col-8">
+                        <div className="col-7">
                           <div className="card">
                             <div className="mx-3 my-2">
                               <p className="card-title small font-weight-light m-0">
@@ -422,7 +441,12 @@ const Dashboard = () => {
                   <td>{transaction.category_name}</td>
                   <td>{transaction.date_created_updated}</td>
                   <td>
-                    <button className="btn btn-warning btn-circle btn-sm m-0">
+                    <button
+                      className="btn btn-warning btn-circle btn-sm m-0"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#staticBackdrop"
+                    >
                       Edit
                     </button>
                     <button
