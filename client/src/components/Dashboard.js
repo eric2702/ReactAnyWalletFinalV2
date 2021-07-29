@@ -44,7 +44,22 @@ const Dashboard = () => {
     date_created_updated: "",
   });
 
+  const [formEditData, setFormEditData] = useState({
+    details_edit: "",
+    category_id_edit: "",
+    nominal_edit: "",
+    date_created_updated_edit: "",
+    transaction_id_edit: "",
+  });
+
   const { details, category_id, nominal, date_created_updated } = formData;
+  const {
+    details_edit,
+    category_id_edit,
+    nominal_edit,
+    transaction_id_edit,
+    date_created_updated_edit,
+  } = formEditData;
 
   function formatRupiah(numb) {
     try {
@@ -66,6 +81,12 @@ const Dashboard = () => {
     let data = { ...formData };
     data[e.target.name] = e.target.value;
     setFormData(data);
+  }
+
+  function handleEditChange(e) {
+    let data = { ...formEditData };
+    data[e.target.name] = e.target.value;
+    setFormEditData(data);
   }
 
   async function getName() {
@@ -157,7 +178,7 @@ const Dashboard = () => {
     }
   }
 
-  const onSubmitTransaction = async (e) => {
+  const onAddTransaction = async (e) => {
     e.preventDefault();
 
     const responseUserId = await axios.get(
@@ -210,6 +231,60 @@ const Dashboard = () => {
       }
     } catch (err) {
       console.log(err.message);
+    }
+  };
+
+  const onEditTransaction = async (e) => {
+    e.preventDefault();
+
+    let url_edit = "http://localhost:5000/dashboard/edit_trans/submit";
+
+    const body = {
+      details_edit,
+      nominal_edit,
+      category_id_edit,
+      transaction_id_edit,
+      date_created_updated_edit,
+    };
+    body.category_id_edit = parseInt(category_id_edit);
+    body.nominal_edit = parseInt(nominal_edit);
+
+    try {
+      const response = await axios.post(url_edit, body, {
+        headers: {
+          token: localStorage.token,
+        },
+      });
+
+      const parseRes = response.data;
+
+      if (parseRes === "error_nominal") {
+        toast.error("Masukkan Nominal Lebih dari 0!");
+      } else if (parseRes === "error_data_type") {
+        toast.error("Masukkan Data dengan Lengkap!");
+      } else {
+        toast.success(parseRes);
+        e.preventDefault();
+        getTransaction();
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const getEditTransaction = async (e) => {
+    e.preventDefault();
+    try {
+      let url_get_edit =
+        "http://localhost:5000/dashboard/edit_trans/" + e.target.value;
+      const responseEdit = await axios.get(url_get_edit, {
+        headers: {
+          token: localStorage.token,
+        },
+      });
+      setFormEditData(responseEdit.data[0]);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -288,7 +363,7 @@ const Dashboard = () => {
               aria-hidden="true"
             >
               <div className="modal-dialog modal-lg">
-                <form onSubmit={onSubmitTransaction}>
+                <form onSubmit={onAddTransaction}>
                   <div className="modal-content">
                     <div className="modal-header">
                       <h5 className="modal-title" id="staticBackdropLabel">
@@ -445,10 +520,160 @@ const Dashboard = () => {
                       className="btn btn-warning btn-circle btn-sm m-0"
                       type="button"
                       data-toggle="modal"
-                      data-target="#staticBackdrop"
+                      data-target="#editForm"
+                      value={transaction.transaction_id}
+                      onClick={(e) => {
+                        getEditTransaction(e);
+                      }}
                     >
                       Edit
                     </button>
+                    <div
+                      className="modal fade"
+                      id="editForm"
+                      data-backdrop="static"
+                      data-keyboard="false"
+                      tabIndex="-1"
+                      aria-labelledby="staticBackdropLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog modal-lg">
+                        <form onSubmit={onEditTransaction}>
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h5
+                                className="modal-title"
+                                id="staticBackdropLabel"
+                              >
+                                Edit Transaction
+                              </h5>
+                            </div>
+                            <div className="modal-body">
+                              <div className="row">
+                                <div className="col-4">
+                                  <div className="card">
+                                    <div className="mx-3 my-2">
+                                      <p className="card-title small font-weight-light m-0">
+                                        Wallet
+                                      </p>
+                                      <span className="font-weight-bolder">
+                                        {name}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-4">
+                                  <div className="card">
+                                    <div className="mx-3 my-2">
+                                      <p className="card-title small font-weight-light m-0">
+                                        Category
+                                      </p>
+                                      <div class="input-group input-group-sm m-0">
+                                        <select
+                                          class="form-control"
+                                          id="exampleFormControlSelect1"
+                                          name="category_id_edit"
+                                          aria-label="Sizing example input"
+                                          aria-describedby="inputGroup-sizing-sm"
+                                          value={formEditData.category_id_edit}
+                                          onChange={handleEditChange}
+                                        >
+                                          <option value="0">
+                                            Select Category
+                                          </option>
+                                          <option value="1">Income</option>
+                                          <option value="2">Expense</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-4">
+                                  <div className="card m-0">
+                                    <div className="mx-3 my-1">
+                                      <p className="card-title small font-weight-light m-0">
+                                        Nominal
+                                      </p>
+                                      <div className="input-group input-group-sm m-0">
+                                        <input
+                                          type="number"
+                                          name="nominal_edit"
+                                          className="form-control border-0"
+                                          aria-label="Sizing example input"
+                                          aria-describedby="inputGroup-sizing-sm"
+                                          placeholder="Isi Nominal Transaksi"
+                                          value={formEditData.nominal_edit}
+                                          onChange={handleEditChange}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mt-4">
+                                <div className="col-5">
+                                  <div className="card">
+                                    <div className="mx-3 my-2">
+                                      <p className="card-title small font-weight-light m-0">
+                                        Date
+                                      </p>
+                                      {/* <span className="font-weight-bolder">{dateString}</span> */}
+                                      <input
+                                        type="datetime-local"
+                                        name="date_created_updated_edit"
+                                        className="form-control"
+                                        value={
+                                          formEditData.date_created_updated_edit
+                                        }
+                                        onChange={handleEditChange}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-7">
+                                  <div className="card">
+                                    <div className="mx-3 my-2">
+                                      <p className="card-title small font-weight-light m-0">
+                                        Details
+                                      </p>
+                                      <div className="input-group input-group-sm m-0">
+                                        <input
+                                          type="text"
+                                          name="details_edit"
+                                          className="form-control border-0"
+                                          aria-label="Sizing example input"
+                                          aria-describedby="inputGroup-sizing-sm"
+                                          placeholder="Isi Details Transaksi"
+                                          value={formEditData.details_edit}
+                                          onChange={handleEditChange}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="modal-footer">
+                              <button
+                                type="button"
+                                className="btn btn-secondary"
+                                data-dismiss="modal"
+                              >
+                                Close
+                              </button>
+                              <button type="submit" className="btn btn-primary">
+                                Save
+                              </button>
+                            </div>
+                          </div>
+                          <input
+                            type="hidden"
+                            name="transaction_id_edit"
+                            value={formEditData.transaction_id_edit}
+                          />
+                        </form>
+                      </div>
+                    </div>
                     <button
                       value={transaction.transaction_id}
                       onClick={(e) => {
@@ -457,7 +682,7 @@ const Dashboard = () => {
                             "Are you sure you wish to delete this transaction?"
                           )
                         )
-                          deleteTransaction(e, "value");
+                          deleteTransaction(e);
                       }}
                       className="btn btn-danger btn-circle btn-sm mx-2"
                     >

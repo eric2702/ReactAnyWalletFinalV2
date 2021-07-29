@@ -11,5 +11,15 @@ router.get(
   authorization,
   dashboardController.postDelete
 );
+router.get(
+  "/edit_trans/:transaction_id",
+  authorization,
+  dashboardController.getEditTransaction
+);
+router.post(
+  "/edit_trans/submit",
+  authorization,
+  dashboardController.postEditTransaction
+);
 
 module.exports = router;

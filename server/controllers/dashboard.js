@@ -26,7 +26,7 @@ exports.postTransaction = async (req, res, next) => {
   try {
     const { details, nominal, category_id, date_created_updated, user_id } =
       req.body;
-    console.log(date_created_updated);
+
     if (nominal <= 0) {
       return res.json("error_nominal");
     }
@@ -52,6 +52,51 @@ exports.getTransaction = async (req, res, next) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json("Server Error");
+  }
+};
+
+exports.getEditTransaction = async (req, res, next) => {
+  try {
+    const editID = req.params.transaction_id;
+    const transactions = await pool.query(
+      "SELECT details as details_edit, nominal as nominal_edit, category_id as category_id_edit, transaction_id as transaction_id_edit, CONCAT(to_char(date_created_updated, 'YYYY-MM-DDT'), to_char(date_created_updated, 'HH24:MI')) as date_created_updated_edit FROM transactions WHERE transaction_id = $1",
+      [editID]
+    );
+    res.json(transactions.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json("Server Error");
+  }
+};
+
+exports.postEditTransaction = async (req, res, next) => {
+  try {
+    const {
+      details_edit,
+      nominal_edit,
+      category_id_edit,
+      date_created_updated_edit,
+      transaction_id_edit,
+    } = req.body;
+
+    if (nominal_edit <= 0) {
+      return res.json("error_nominal");
+    }
+
+    const editTransaction = await pool.query(
+      "UPDATE transactions SET details = $1, nominal = $2, category_id = $3, date_created_updated = $4 WHERE transaction_id = $5 RETURNING *",
+      [
+        details_edit,
+        nominal_edit,
+        category_id_edit,
+        date_created_updated_edit,
+        transaction_id_edit,
+      ]
+    );
+    return res.json("Transaction Edited Successfully!");
+  } catch (err) {
+    console.error(err.message);
+    res.json("error_data_type");
   }
 };
 
