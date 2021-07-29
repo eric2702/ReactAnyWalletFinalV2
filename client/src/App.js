@@ -13,6 +13,7 @@ import Loading from "./components/Loading";
 import { authActions } from "./store/auth";
 import Home from "./components/Home";
 import AOS from "aos";
+import "aos/dist/aos.css";
 
 const axios = require("axios");
 
@@ -49,9 +50,6 @@ function App() {
 
   useEffect(() => {
     isAuthEffect();
-  });
-
-  useEffect(() => {
     AOS.init();
   }, []);
 
