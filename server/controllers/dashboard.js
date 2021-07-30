@@ -45,7 +45,7 @@ exports.postTransaction = async (req, res, next) => {
 exports.getTransaction = async (req, res, next) => {
   try {
     const transactions = await pool.query(
-      "SELECT transaction_id, details, nominal, c.category_name, to_char(date_created_updated, 'Day, dd Month yyyy, hh24:mi') as date_created_updated FROM transactions t JOIN categories c on (t.category_id = c.category_id) WHERE user_id = $1 ORDER BY t.date_created_updated",
+      "SELECT transaction_id, details, nominal, c.category_name, to_char(date_created_updated, 'Day, dd Month yyyy, hh24:mi') as date_created_updated FROM transactions t JOIN categories c on (t.category_id = c.category_id) WHERE user_id = $1 ORDER BY t.date_created_updated DESC",
       [req.user]
     );
     res.json(transactions.rows);
@@ -58,7 +58,7 @@ exports.getTransaction = async (req, res, next) => {
 exports.getYears = async (req, res, next) => {
   try {
     const transactions = await pool.query(
-      "SELECT to_char(date_created_updated, 'YYYY') as years_available FROM transactions WHERE user_id = $1 GROUP BY years_available",
+      "SELECT to_char(date_created_updated, 'YYYY') as years_available FROM transactions WHERE user_id = $1 GROUP BY years_available ORDER BY years_available DESC",
       [req.user]
     );
     res.json(transactions.rows);

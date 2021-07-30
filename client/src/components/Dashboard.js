@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { authActions } from "../store/auth";
+import Pagination from "./Pagination";
 const axios = require("axios");
 
 const Dashboard = () => {
@@ -36,6 +37,11 @@ const Dashboard = () => {
     "Saturday",
   ];
   const [transactions, setTransactions] = useState([{}]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(10);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = transactions.slice(indexOfFirstPost, indexOfLastPost);
 
   const [amount, setAmount] = useState({});
   const [actionDisplay, setActionDisplay] = useState("none");
@@ -142,7 +148,7 @@ const Dashboard = () => {
 
       var parseRes = response.data;
       setYearsAvailable(response_year.data);
-      console.log(yearsAvailable);
+
       if (filter.details_filter !== "") {
         parseRes = parseRes.filter(function (array) {
           return (
@@ -352,10 +358,15 @@ const Dashboard = () => {
     toast.error("Logged out successfully");
   };
 
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   useEffect(() => {
     getName();
     getTransaction();
     getDateString();
+    setCurrentPage(1);
   }, [filter]);
   return (
     //AMOUNT
@@ -622,7 +633,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction, index) => (
+              {currentPosts.map((transaction, index) => (
                 <tr key={index}>
                   <td>{transaction.details}</td>
                   <td>{formatRupiah(transaction.nominal)}</td>
@@ -806,6 +817,11 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
+        <Pagination
+          postsPerPage={postsPerPage}
+          totalPosts={transactions.length}
+          paginate={paginate}
+        />
       </div>
     </div>
   );
