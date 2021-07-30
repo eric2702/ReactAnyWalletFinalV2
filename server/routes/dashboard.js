@@ -21,5 +21,6 @@ router.post(
   authorization,
   dashboardController.postEditTransaction
 );
+router.get("/get_years", authorization, dashboardController.getYears);
 
 module.exports = router;

@@ -55,6 +55,19 @@ exports.getTransaction = async (req, res, next) => {
   }
 };
 
+exports.getYears = async (req, res, next) => {
+  try {
+    const transactions = await pool.query(
+      "SELECT to_char(date_created_updated, 'YYYY') as years_available FROM transactions WHERE user_id = $1 GROUP BY years_available",
+      [req.user]
+    );
+    res.json(transactions.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json("Server Error");
+  }
+};
+
 exports.getEditTransaction = async (req, res, next) => {
   try {
     const editID = req.params.transaction_id;

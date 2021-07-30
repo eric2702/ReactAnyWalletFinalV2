@@ -11,6 +11,7 @@ const Dashboard = () => {
   };
   const [name, setName] = useState("");
   const [dateString, setDateString] = useState("");
+  const [yearsAvailable, setYearsAvailable] = useState([]);
   const monthNames = [
     "January",
     "February",
@@ -35,7 +36,9 @@ const Dashboard = () => {
     "Saturday",
   ];
   const [transactions, setTransactions] = useState([{}]);
+
   const [amount, setAmount] = useState({});
+  const [actionDisplay, setActionDisplay] = useState("none");
 
   const [formData, setFormData] = useState({
     details: "",
@@ -50,6 +53,13 @@ const Dashboard = () => {
     nominal_edit: "",
     date_created_updated_edit: "",
     transaction_id_edit: "",
+  });
+
+  const [filter, setFilter] = useState({
+    details_filter: "",
+    nominal_filter: -1,
+    category_name_filter: "",
+    year_filter: "",
   });
 
   const { details, category_id, nominal, date_created_updated } = formData;
@@ -89,6 +99,12 @@ const Dashboard = () => {
     setFormEditData(data);
   }
 
+  function handleFilterChange(e) {
+    let data = { ...filter };
+    data[e.target.name] = e.target.value;
+    setFilter(data);
+  }
+
   async function getName() {
     try {
       const response = await axios.get("http://localhost:5000/dashboard/", {
@@ -115,8 +131,49 @@ const Dashboard = () => {
           },
         }
       );
+      const response_year = await axios.get(
+        "http://localhost:5000/dashboard/get_years",
+        {
+          headers: {
+            token: localStorage.token,
+          },
+        }
+      );
 
-      const parseRes = response.data;
+      var parseRes = response.data;
+      setYearsAvailable(response_year.data);
+      console.log(yearsAvailable);
+      if (filter.details_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return (
+            array.details
+              .toUpperCase()
+              .includes(filter.details_filter.toUpperCase()) ||
+            array.nominal === filter.details_filter ||
+            array.category_name
+              .toUpperCase()
+              .includes(filter.details_filter.toUpperCase()) ||
+            array.date_created_updated
+              .toUpperCase()
+              .includes(filter.details_filter.toUpperCase())
+          );
+        });
+      }
+
+      if (filter.category_name_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return (
+            array.category_name.toUpperCase() ===
+            filter.category_name_filter.toUpperCase()
+          );
+        });
+      }
+
+      if (filter.year_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return array.date_created_updated.includes(filter.year_filter);
+        });
+      }
 
       setTransactions(parseRes);
       let income = 0;
@@ -299,7 +356,7 @@ const Dashboard = () => {
     getName();
     getTransaction();
     getDateString();
-  }, []);
+  }, [filter]);
   return (
     //AMOUNT
     <div>
@@ -340,18 +397,31 @@ const Dashboard = () => {
       <div className="container mt-5">
         <div className="row">
           <div className="col-sm-1"></div>
-          <div className="col-sm-4">
+          <div className="col-sm-2">
             <p style={{ fontWeight: "bold" }}>{dateString}</p>
           </div>
-          <div className="col-sm-3"></div>
-          <div className="col-sm-3">
+          {/* <div className="col-sm-3"></div> */}
+          <div className="col-sm-8 d-flex justify-content-end">
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-success mx-1"
               data-toggle="modal"
               data-target="#staticBackdrop"
             >
               Add Transaction
+            </button>
+            <button
+              type="button"
+              className="btn btn-info mx-1"
+              onClick={(e) => {
+                if (actionDisplay === "none") {
+                  setActionDisplay("");
+                } else {
+                  setActionDisplay("none");
+                }
+              }}
+            >
+              Edit
             </button>
             <div
               className="modal fade"
@@ -401,7 +471,6 @@ const Dashboard = () => {
                                 /> */}
                                 <select
                                   class="form-control"
-                                  id="exampleFormControlSelect1"
                                   name="category_id"
                                   aria-label="Sizing example input"
                                   aria-describedby="inputGroup-sizing-sm"
@@ -497,6 +566,50 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        <div class="input-group rounded col-7">
+          <input
+            type="search"
+            name="details_filter"
+            value={filter.details_filter}
+            class="form-control rounded col-5"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="search-addon"
+            onChange={handleFilterChange}
+          />
+          <span class="input-group-text border-0 mr-1" id="search-addon">
+            <i class="fas fa-search"></i>
+          </span>
+          <select
+            class="form-control rounded col-4"
+            name="category_name_filter"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={filter.category_name_filter}
+            onChange={handleFilterChange}
+          >
+            <option value="">Income & Expense</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+          </select>
+          <select
+            class="form-control rounded ml-1 col-3"
+            name="year_filter"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={filter.year_filter}
+            onChange={handleFilterChange}
+          >
+            <option value="">All Years</option>
+            {yearsAvailable.map((year) => (
+              <option value={year.years_available}>
+                {year.years_available}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="row mt-5 container">
           <table className="table table-bordered" id="dataTable" width="100%">
             <thead>
@@ -505,7 +618,7 @@ const Dashboard = () => {
                 <th>Nominal</th>
                 <th>Category</th>
                 <th>Date & Time</th>
-                <th>Action</th>
+                <th style={{ display: actionDisplay }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -515,9 +628,9 @@ const Dashboard = () => {
                   <td>{formatRupiah(transaction.nominal)}</td>
                   <td>{transaction.category_name}</td>
                   <td>{transaction.date_created_updated}</td>
-                  <td>
+                  <td style={{ display: actionDisplay }}>
                     <button
-                      className="btn btn-warning btn-circle btn-sm m-0"
+                      className="btn btn-warning btn-circle btn-sm mx-1"
                       type="button"
                       data-toggle="modal"
                       data-target="#editForm"
@@ -571,7 +684,6 @@ const Dashboard = () => {
                                       <div class="input-group input-group-sm m-0">
                                         <select
                                           class="form-control"
-                                          id="exampleFormControlSelect1"
                                           name="category_id_edit"
                                           aria-label="Sizing example input"
                                           aria-describedby="inputGroup-sizing-sm"
@@ -684,7 +796,7 @@ const Dashboard = () => {
                         )
                           deleteTransaction(e);
                       }}
-                      className="btn btn-danger btn-circle btn-sm mx-2"
+                      className="btn btn-danger btn-circle btn-sm mx-1"
                     >
                       Del
                     </button>
