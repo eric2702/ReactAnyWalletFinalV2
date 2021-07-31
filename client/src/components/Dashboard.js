@@ -38,7 +38,9 @@ const Dashboard = () => {
   ];
   const [transactions, setTransactions] = useState([{}]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
+  const [postsPerPage, setPostsPerPage] = useState(10);
+  const [sort, setSort] = useState("date");
+  const [ascDsc, setAscDsc] = useState("descending");
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = transactions.slice(indexOfFirstPost, indexOfLastPost);
@@ -63,9 +65,13 @@ const Dashboard = () => {
 
   const [filter, setFilter] = useState({
     details_filter: "",
-    nominal_filter: -1,
     category_name_filter: "",
-    year_filter: "",
+    year_from_filter: "",
+    year_to_filter: "",
+    month_from_filter: "",
+    month_to_filter: "",
+    nominal_from_filter: "",
+    nominal_to_filter: "",
   });
 
   const { details, category_id, nominal, date_created_updated } = formData;
@@ -151,18 +157,19 @@ const Dashboard = () => {
 
       if (filter.details_filter !== "") {
         parseRes = parseRes.filter(function (array) {
-          return (
-            array.details
-              .toUpperCase()
-              .includes(filter.details_filter.toUpperCase()) ||
-            array.nominal === filter.details_filter ||
-            array.category_name
-              .toUpperCase()
-              .includes(filter.details_filter.toUpperCase()) ||
-            array.date_created_updated
-              .toUpperCase()
-              .includes(filter.details_filter.toUpperCase())
-          );
+          return array.details
+            .toUpperCase()
+            .includes(filter.details_filter.toUpperCase());
+        });
+      }
+      if (filter.nominal_from_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return array.nominal >= parseInt(filter.nominal_from_filter);
+        });
+      }
+      if (filter.nominal_to_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return array.nominal <= parseInt(filter.nominal_to_filter);
         });
       }
 
@@ -174,11 +181,51 @@ const Dashboard = () => {
           );
         });
       }
-
-      if (filter.year_filter !== "") {
+      console.log(parseRes);
+      if (filter.year_from_filter !== "") {
         parseRes = parseRes.filter(function (array) {
-          return array.date_created_updated.includes(filter.year_filter);
+          return (
+            parseInt(array.date_created_updated_raw.substring(0, 4)) >=
+            filter.year_from_filter
+          );
         });
+      }
+      if (filter.year_to_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return (
+            parseInt(array.date_created_updated_raw.substring(0, 4)) <=
+            filter.year_to_filter
+          );
+        });
+      }
+      if (filter.month_from_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return (
+            parseInt(array.date_created_updated_raw.substring(5, 7)) >=
+            filter.month_from_filter
+          );
+        });
+      }
+      if (filter.month_to_filter !== "") {
+        parseRes = parseRes.filter(function (array) {
+          return (
+            parseInt(array.date_created_updated_raw.substring(5, 7)) <=
+            filter.month_to_filter
+          );
+        });
+      }
+      if (sort === "sort_nominal") {
+        parseRes.sort(function (a, b) {
+          return parseFloat(b.nominal) - parseFloat(a.nominal);
+        });
+      }
+      if (sort === "sort_details") {
+        parseRes.sort(function (a, b) {
+          return b.details.localeCompare(a.details);
+        });
+      }
+      if (ascDsc === "ascending") {
+        parseRes = parseRes.reverse();
       }
 
       setTransactions(parseRes);
@@ -367,7 +414,7 @@ const Dashboard = () => {
     getTransaction();
     getDateString();
     setCurrentPage(1);
-  }, [filter]);
+  }, [filter, sort, ascDsc]);
   return (
     //AMOUNT
     <div>
@@ -407,8 +454,8 @@ const Dashboard = () => {
       {/* TRANSACTIONS */}
       <div className="container mt-5">
         <div className="row">
-          <div className="col-sm-1"></div>
-          <div className="col-sm-2">
+          {/* <div className="col-sm-1"></div> */}
+          <div className="col-sm-3 ml-3">
             <p style={{ fontWeight: "bold" }}>{dateString}</p>
           </div>
           {/* <div className="col-sm-3"></div> */}
@@ -433,6 +480,43 @@ const Dashboard = () => {
               }}
             >
               Edit
+            </button>
+            <button
+              type="button"
+              className={
+                "btn mx-1 " +
+                (ascDsc === "ascending" ? "btn-warning" : "btn-secondary")
+              }
+              onClick={(e) => {
+                if (ascDsc === "ascending") {
+                  setAscDsc("descending");
+                } else {
+                  setAscDsc("ascending");
+                }
+              }}
+            >
+              {ascDsc === "ascending" ? "ASC" : "DSC"}
+            </button>
+            <button
+              type="button"
+              className="btn mx-1 btn-danger"
+              onClick={(e) => {
+                setAscDsc("descending");
+                setPostsPerPage(10);
+                setSort("");
+                setFilter({
+                  details_filter: "",
+                  category_name_filter: "",
+                  year_from_filter: "",
+                  year_to_filter: "",
+                  month_from_filter: "",
+                  month_to_filter: "",
+                  nominal_from_filter: "",
+                  nominal_to_filter: "",
+                });
+              }}
+            >
+              Reset Filters
             </button>
             <div
               className="modal fade"
@@ -578,22 +662,22 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div class="input-group rounded col-7">
+        <div class="input-group rounded col-10 mt-3">
           <input
             type="search"
             name="details_filter"
             value={filter.details_filter}
-            class="form-control rounded col-5"
-            placeholder="Search"
+            class="form-control rounded col-3"
+            placeholder="Search Details"
             aria-label="Search"
             aria-describedby="search-addon"
             onChange={handleFilterChange}
           />
-          <span class="input-group-text border-0 mr-1" id="search-addon">
+          {/* <span class="input-group-text border-0" id="search-addon">
             <i class="fas fa-search"></i>
-          </span>
+          </span> */}
           <select
-            class="form-control rounded col-4"
+            class="form-control rounded col-3 ml-1"
             name="category_name_filter"
             aria-label="Sizing example input"
             aria-describedby="inputGroup-sizing-sm"
@@ -605,23 +689,112 @@ const Dashboard = () => {
             <option value="Expense">Expense</option>
           </select>
           <select
-            class="form-control rounded ml-1 col-3"
-            name="year_filter"
+            class="form-control rounded ml-1 col-2"
+            name="year_from_filter"
             aria-label="Sizing example input"
             aria-describedby="inputGroup-sizing-sm"
-            value={filter.year_filter}
+            value={filter.year_from_filter}
             onChange={handleFilterChange}
           >
-            <option value="">All Years</option>
+            <option value="">From Year</option>
             {yearsAvailable.map((year) => (
               <option value={year.years_available}>
                 {year.years_available}
               </option>
             ))}
           </select>
+          <select
+            class="form-control rounded ml-1 col-2"
+            name="year_to_filter"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={filter.year_to_filter}
+            onChange={handleFilterChange}
+          >
+            <option value="">To Year</option>
+            {yearsAvailable.map((year) => (
+              <option value={year.years_available}>
+                {year.years_available}
+              </option>
+            ))}
+          </select>
+          <select
+            class="form-control col-2 mx-1"
+            name="postsPerPage"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={postsPerPage}
+            onChange={(e) => setPostsPerPage(e.target.value)}
+          >
+            <option value={5}>No. Trans (5)</option>
+            <option value={8}>No. Trans (8)</option>
+            <option value={10}>No. Trans (10)</option>
+            <option value={15}>No. Trans (15)</option>
+            <option value={20}>No. Trans (20)</option>
+          </select>
+        </div>
+        <div class="input-group rounded col-10 mt-3">
+          <input
+            type="number"
+            name="nominal_from_filter"
+            value={filter.nominal_from_filter}
+            class="form-control rounded col-3"
+            placeholder="From 100"
+            aria-label="Search"
+            aria-describedby="search-addon"
+            onChange={handleFilterChange}
+          />
+          <input
+            type="number"
+            name="nominal_to_filter"
+            value={filter.nominal_to_filter}
+            class="form-control rounded ml-1 col-3"
+            placeholder="To 100"
+            aria-label="Search"
+            aria-describedby="search-addon"
+            onChange={handleFilterChange}
+          />
+          <select
+            class="form-control rounded ml-1 col-2"
+            name="month_from_filter"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={filter.month_from_filter}
+            onChange={handleFilterChange}
+          >
+            <option value="">From Month</option>
+            {monthNames.map((month, index) => (
+              <option value={index + 1}>{month}</option>
+            ))}
+          </select>
+          <select
+            class="form-control rounded ml-1 col-2"
+            name="month_to_filter"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={filter.month_to_filter}
+            onChange={handleFilterChange}
+          >
+            <option value="">To Month</option>
+            {monthNames.map((month, index) => (
+              <option value={index + 1}>{month}</option>
+            ))}
+          </select>
+          <select
+            class="form-control col-2 mx-1"
+            name="sort"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-sm"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value="sort_date">Sort By (Date)</option>
+            <option value="sort_nominal">Sort By (Nominal)</option>
+            <option value="sort_details">Sort By (Details)</option>
+          </select>
         </div>
 
-        <div className="row mt-5 container">
+        <div className="row mt-4 container">
           <table className="table table-bordered" id="dataTable" width="100%">
             <thead>
               <tr>

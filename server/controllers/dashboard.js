@@ -45,7 +45,7 @@ exports.postTransaction = async (req, res, next) => {
 exports.getTransaction = async (req, res, next) => {
   try {
     const transactions = await pool.query(
-      "SELECT transaction_id, details, nominal, c.category_name, to_char(date_created_updated, 'Day, dd Month yyyy, hh24:mi') as date_created_updated FROM transactions t JOIN categories c on (t.category_id = c.category_id) WHERE user_id = $1 ORDER BY t.date_created_updated DESC",
+      "SELECT transaction_id, details, nominal, c.category_name, date_created_updated as date_created_updated_raw, to_char(date_created_updated, 'Day, dd Month yyyy, hh24:mi') as date_created_updated FROM transactions t JOIN categories c on (t.category_id = c.category_id) WHERE user_id = $1 ORDER BY t.date_created_updated DESC",
       [req.user]
     );
     res.json(transactions.rows);
