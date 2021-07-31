@@ -423,8 +423,7 @@ const Dashboard = () => {
         Logout
       </button>
       <div className="container mt-5">
-        <div className="row">
-          <div className="col-sm-1"></div>
+        <div className="row justify-content-center">
           <div className="col-sm-3">
             <div className="card">
               <div className="card-body text-primary">
@@ -452,14 +451,14 @@ const Dashboard = () => {
         </div>
       </div>
       {/* TRANSACTIONS */}
-      <div className="container mt-5">
-        <div className="row">
+      <div className="container mt-4">
+        <div className="row col-12 m-0 p-0">
           {/* <div className="col-sm-1"></div> */}
-          <div className="col-sm-3 ml-3">
+          <div className="col-sm-3">
             <p style={{ fontWeight: "bold" }}>{dateString}</p>
           </div>
           {/* <div className="col-sm-3"></div> */}
-          <div className="col-sm-8 d-flex justify-content-end">
+          <div className="col-sm-9 d-flex justify-content-end">
             <button
               type="button"
               className="btn btn-success mx-1"
@@ -481,43 +480,7 @@ const Dashboard = () => {
             >
               Edit
             </button>
-            <button
-              type="button"
-              className={
-                "btn mx-1 " +
-                (ascDsc === "ascending" ? "btn-warning" : "btn-secondary")
-              }
-              onClick={(e) => {
-                if (ascDsc === "ascending") {
-                  setAscDsc("descending");
-                } else {
-                  setAscDsc("ascending");
-                }
-              }}
-            >
-              {ascDsc === "ascending" ? "ASC" : "DSC"}
-            </button>
-            <button
-              type="button"
-              className="btn mx-1 btn-danger"
-              onClick={(e) => {
-                setAscDsc("descending");
-                setPostsPerPage(10);
-                setSort("");
-                setFilter({
-                  details_filter: "",
-                  category_name_filter: "",
-                  year_from_filter: "",
-                  year_to_filter: "",
-                  month_from_filter: "",
-                  month_to_filter: "",
-                  nominal_from_filter: "",
-                  nominal_to_filter: "",
-                });
-              }}
-            >
-              Reset Filters
-            </button>
+
             <div
               className="modal fade"
               id="staticBackdrop"
@@ -662,7 +625,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div class="input-group rounded col-10 mt-3">
+        <div class="input-group rounded col-12 mt-3">
           <input
             type="search"
             name="details_filter"
@@ -733,7 +696,7 @@ const Dashboard = () => {
             <option value={20}>No. Trans (20)</option>
           </select>
         </div>
-        <div class="input-group rounded col-10 mt-3">
+        <div class="input-group rounded col-12 mt-3">
           <input
             type="number"
             name="nominal_from_filter"
@@ -793,26 +756,78 @@ const Dashboard = () => {
             <option value="sort_details">Sort By (Details)</option>
           </select>
         </div>
+        <div class="input-group rounded col-10 mt-3">
+          <button
+            type="button"
+            className={
+              "btn " +
+              (ascDsc === "ascending" ? "btn-warning" : "btn-secondary")
+            }
+            onClick={(e) => {
+              if (ascDsc === "ascending") {
+                setAscDsc("descending");
+              } else {
+                setAscDsc("ascending");
+              }
+            }}
+          >
+            {ascDsc === "ascending" ? "ASC" : "DSC"}
+          </button>
+          <button
+            type="button"
+            className="btn mx-1 btn-danger"
+            onClick={(e) => {
+              setAscDsc("descending");
+              setPostsPerPage(10);
+              setSort("");
+              setFilter({
+                details_filter: "",
+                category_name_filter: "",
+                year_from_filter: "",
+                year_to_filter: "",
+                month_from_filter: "",
+                month_to_filter: "",
+                nominal_from_filter: "",
+                nominal_to_filter: "",
+              });
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
 
-        <div className="row mt-4 container">
-          <table className="table table-bordered" id="dataTable" width="100%">
-            <thead>
+        <div className="row mt-4 container m-0 justify-content-center">
+          <table
+            className="table table-bordered col-11"
+            id="dataTable"
+            width="100%"
+          >
+            <thead className="thead-dark">
               <tr>
-                <th>Details</th>
-                <th>Nominal</th>
-                <th>Category</th>
-                <th>Date & Time</th>
-                <th style={{ display: actionDisplay }}>Action</th>
+                <th className="text-center">Details</th>
+                <th className="text-center">Nominal</th>
+                <th className="text-center">Category</th>
+                <th className="text-center">Date & Time</th>
+                <th className="text-center" style={{ display: actionDisplay }}>
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentPosts.map((transaction, index) => (
                 <tr key={index}>
-                  <td>{transaction.details}</td>
-                  <td>{formatRupiah(transaction.nominal)}</td>
-                  <td>{transaction.category_name}</td>
-                  <td>{transaction.date_created_updated}</td>
-                  <td style={{ display: actionDisplay }}>
+                  <td className="text-center">{transaction.details}</td>
+                  <td className="text-right">
+                    {formatRupiah(transaction.nominal)}
+                  </td>
+                  <td className="text-center">{transaction.category_name}</td>
+                  <td className="text-center">
+                    {transaction.date_created_updated}
+                  </td>
+                  <td
+                    className="text-center"
+                    style={{ display: actionDisplay }}
+                  >
                     <button
                       className="btn btn-warning btn-circle btn-sm mx-1"
                       type="button"
