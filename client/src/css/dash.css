@@ -4,3 +4,12 @@
   border-color: black !important;
   background: #343a40;
 }
+
+.nominal-font {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.modal-border {
+  border: 0;
+}

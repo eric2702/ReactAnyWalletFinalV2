@@ -427,7 +427,7 @@ const Dashboard = () => {
             <div className="card bg-primary">
               <div className="card-body text-white">
                 <h5 className="card-title">Balance</h5>
-                <p className="card-text">{amount.balance}</p>
+                <p className="card-text nominal-font">{amount.balance}</p>
               </div>
             </div>
           </div>
@@ -435,7 +435,7 @@ const Dashboard = () => {
             <div className="card bg-success">
               <div className="card-body text-white">
                 <h5 className="card-title">Income</h5>
-                <p className="card-text">{amount.income}</p>
+                <p className="card-text nominal-font">{amount.income}</p>
               </div>
             </div>
           </div>
@@ -443,7 +443,7 @@ const Dashboard = () => {
             <div className="card bg-danger">
               <div className="card-body text-white">
                 <h5 className="card-title">Expense</h5>
-                <p className="card-text">{amount.expense}</p>
+                <p className="card-text nominal-font">{amount.expense}</p>
               </div>
             </div>
           </div>
@@ -491,8 +491,8 @@ const Dashboard = () => {
             >
               <div className="modal-dialog modal-lg">
                 <form onSubmit={onAddTransaction}>
-                  <div className="modal-content">
-                    <div className="modal-header">
+                  <div className="modal-content modal-border">
+                    <div className="modal-header bg-success">
                       <h5 className="modal-title" id="staticBackdropLabel">
                         Add Transaction
                       </h5>
@@ -840,151 +840,6 @@ const Dashboard = () => {
                     >
                       Edit
                     </button>
-                    <div
-                      className="modal fade"
-                      id="editForm"
-                      data-backdrop="static"
-                      data-keyboard="false"
-                      tabIndex="-1"
-                      aria-labelledby="staticBackdropLabel"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog modal-lg">
-                        <form onSubmit={onEditTransaction}>
-                          <div className="modal-content">
-                            <div className="modal-header">
-                              <h5
-                                className="modal-title"
-                                id="staticBackdropLabel"
-                              >
-                                Edit Transaction
-                              </h5>
-                            </div>
-                            <div className="modal-body">
-                              <div className="row">
-                                <div className="col-4">
-                                  <div className="card">
-                                    <div className="mx-3 my-2">
-                                      <p className="card-title small font-weight-light m-0">
-                                        Wallet
-                                      </p>
-                                      <span className="font-weight-bolder">
-                                        {name}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-4">
-                                  <div className="card">
-                                    <div className="mx-3 my-2">
-                                      <p className="card-title small font-weight-light m-0">
-                                        Category
-                                      </p>
-                                      <div class="input-group input-group-sm m-0">
-                                        <select
-                                          class="form-control"
-                                          name="category_id_edit"
-                                          aria-label="Sizing example input"
-                                          aria-describedby="inputGroup-sizing-sm"
-                                          value={formEditData.category_id_edit}
-                                          onChange={handleEditChange}
-                                        >
-                                          <option value="0">
-                                            Select Category
-                                          </option>
-                                          <option value="1">Income</option>
-                                          <option value="2">Expense</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-4">
-                                  <div className="card m-0">
-                                    <div className="mx-3 my-1">
-                                      <p className="card-title small font-weight-light m-0">
-                                        Nominal
-                                      </p>
-                                      <div className="input-group input-group-sm m-0">
-                                        <input
-                                          type="number"
-                                          name="nominal_edit"
-                                          className="form-control border-0"
-                                          aria-label="Sizing example input"
-                                          aria-describedby="inputGroup-sizing-sm"
-                                          placeholder="Isi Nominal Transaksi"
-                                          value={formEditData.nominal_edit}
-                                          onChange={handleEditChange}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row mt-4">
-                                <div className="col-5">
-                                  <div className="card">
-                                    <div className="mx-3 my-2">
-                                      <p className="card-title small font-weight-light m-0">
-                                        Date
-                                      </p>
-                                      {/* <span className="font-weight-bolder">{dateString}</span> */}
-                                      <input
-                                        type="datetime-local"
-                                        name="date_created_updated_edit"
-                                        className="form-control"
-                                        value={
-                                          formEditData.date_created_updated_edit
-                                        }
-                                        onChange={handleEditChange}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-7">
-                                  <div className="card">
-                                    <div className="mx-3 my-2">
-                                      <p className="card-title small font-weight-light m-0">
-                                        Details
-                                      </p>
-                                      <div className="input-group input-group-sm m-0">
-                                        <input
-                                          type="text"
-                                          name="details_edit"
-                                          className="form-control border-0"
-                                          aria-label="Sizing example input"
-                                          aria-describedby="inputGroup-sizing-sm"
-                                          placeholder="Isi Details Transaksi"
-                                          value={formEditData.details_edit}
-                                          onChange={handleEditChange}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="modal-footer">
-                              <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-dismiss="modal"
-                              >
-                                Close
-                              </button>
-                              <button type="submit" className="btn btn-primary">
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                          <input
-                            type="hidden"
-                            name="transaction_id_edit"
-                            value={formEditData.transaction_id_edit}
-                          />
-                        </form>
-                      </div>
-                    </div>
                     <button
                       value={transaction.transaction_id}
                       onClick={(e) => {
@@ -1000,6 +855,151 @@ const Dashboard = () => {
                       Del
                     </button>
                   </td>
+                  <div
+                    className="modal fade"
+                    id="editForm"
+                    data-backdrop="static"
+                    data-keyboard="false"
+                    tabIndex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                  >
+                    <div className="modal-dialog modal-lg">
+                      <form onSubmit={onEditTransaction}>
+                        <div className="modal-content modal-border">
+                          <div className="modal-header bg-warning">
+                            <h5
+                              className="modal-title"
+                              id="staticBackdropLabel"
+                            >
+                              Edit Transaction
+                            </h5>
+                          </div>
+                          <div className="modal-body">
+                            <div className="row">
+                              <div className="col-4">
+                                <div className="card">
+                                  <div className="mx-3 my-2">
+                                    <p className="card-title small font-weight-light m-0">
+                                      Wallet
+                                    </p>
+                                    <span className="font-weight-bolder">
+                                      {name}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-4">
+                                <div className="card">
+                                  <div className="mx-3 my-2">
+                                    <p className="card-title small font-weight-light m-0">
+                                      Category
+                                    </p>
+                                    <div class="input-group input-group-sm m-0">
+                                      <select
+                                        class="form-control"
+                                        name="category_id_edit"
+                                        aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        value={formEditData.category_id_edit}
+                                        onChange={handleEditChange}
+                                      >
+                                        <option value="0">
+                                          Select Category
+                                        </option>
+                                        <option value="1">Income</option>
+                                        <option value="2">Expense</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-4">
+                                <div className="card m-0">
+                                  <div className="mx-3 my-1">
+                                    <p className="card-title small font-weight-light m-0">
+                                      Nominal
+                                    </p>
+                                    <div className="input-group input-group-sm m-0">
+                                      <input
+                                        type="number"
+                                        name="nominal_edit"
+                                        className="form-control border-0"
+                                        aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        placeholder="Isi Nominal Transaksi"
+                                        value={formEditData.nominal_edit}
+                                        onChange={handleEditChange}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row mt-4">
+                              <div className="col-5">
+                                <div className="card">
+                                  <div className="mx-3 my-2">
+                                    <p className="card-title small font-weight-light m-0">
+                                      Date
+                                    </p>
+                                    {/* <span className="font-weight-bolder">{dateString}</span> */}
+                                    <input
+                                      type="datetime-local"
+                                      name="date_created_updated_edit"
+                                      className="form-control"
+                                      value={
+                                        formEditData.date_created_updated_edit
+                                      }
+                                      onChange={handleEditChange}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-7">
+                                <div className="card">
+                                  <div className="mx-3 my-2">
+                                    <p className="card-title small font-weight-light m-0">
+                                      Details
+                                    </p>
+                                    <div className="input-group input-group-sm m-0">
+                                      <input
+                                        type="text"
+                                        name="details_edit"
+                                        className="form-control border-0"
+                                        aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        placeholder="Isi Details Transaksi"
+                                        value={formEditData.details_edit}
+                                        onChange={handleEditChange}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              data-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button type="submit" className="btn btn-primary">
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                        <input
+                          type="hidden"
+                          name="transaction_id_edit"
+                          value={formEditData.transaction_id_edit}
+                        />
+                      </form>
+                    </div>
+                  </div>
                 </tr>
               ))}
             </tbody>
