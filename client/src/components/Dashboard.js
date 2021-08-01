@@ -3,13 +3,15 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { authActions } from "../store/auth";
 import Pagination from "./Pagination";
+import Navbar from "./partials/Navbar";
+import "../css/dash.css";
 const axios = require("axios");
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-  const logoutHandler = () => {
-    dispatch(authActions.logout());
-  };
+  // const dispatch = useDispatch();
+  // const logoutHandler = () => {
+  //   dispatch(authActions.logout());
+  // };
   const [name, setName] = useState("");
   const [dateString, setDateString] = useState("");
   const [yearsAvailable, setYearsAvailable] = useState([]);
@@ -398,12 +400,12 @@ const Dashboard = () => {
     }
   };
 
-  const logout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("token");
-    logoutHandler();
-    toast.error("Logged out successfully");
-  };
+  // const logout = (e) => {
+  //   e.preventDefault();
+  //   localStorage.removeItem("token");
+  //   logoutHandler();
+  //   toast.error("Logged out successfully");
+  // };
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -417,32 +419,29 @@ const Dashboard = () => {
   }, [filter, sort, ascDsc]);
   return (
     //AMOUNT
-    <div>
-      <h1 className="d-flex">Dashboard {name}</h1>
-      <button className="btn btn-primary" onClick={(e) => logout(e)}>
-        Logout
-      </button>
+    <div className="dash-bg">
+      <Navbar loggedIn={true} name={name} />
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-sm-3">
-            <div className="card">
-              <div className="card-body text-primary">
+            <div className="card bg-primary">
+              <div className="card-body text-white">
                 <h5 className="card-title">Balance</h5>
                 <p className="card-text">{amount.balance}</p>
               </div>
             </div>
           </div>
           <div className="col-sm-3">
-            <div className="card">
-              <div className="card-body text-success">
+            <div className="card bg-success">
+              <div className="card-body text-white">
                 <h5 className="card-title">Income</h5>
                 <p className="card-text">{amount.income}</p>
               </div>
             </div>
           </div>
           <div className="col-sm-3">
-            <div className="card">
-              <div className="card-body text-danger">
+            <div className="card bg-danger">
+              <div className="card-body text-white">
                 <h5 className="card-title">Expense</h5>
                 <p className="card-text">{amount.expense}</p>
               </div>
@@ -624,176 +623,177 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <div class="input-group rounded col-12 mt-3">
-          <input
-            type="search"
-            name="details_filter"
-            value={filter.details_filter}
-            class="form-control rounded col-3"
-            placeholder="Search Details"
-            aria-label="Search"
-            aria-describedby="search-addon"
-            onChange={handleFilterChange}
-          />
-          {/* <span class="input-group-text border-0" id="search-addon">
+        <div class="border mt-3 rounded">
+          <div class="input-group rounded col-12 mt-3">
+            <input
+              type="search"
+              name="details_filter"
+              value={filter.details_filter}
+              class="form-control rounded col-3"
+              placeholder="Search Details"
+              aria-label="Search"
+              aria-describedby="search-addon"
+              onChange={handleFilterChange}
+            />
+            {/* <span class="input-group-text border-0" id="search-addon">
             <i class="fas fa-search"></i>
           </span> */}
-          <select
-            class="form-control rounded col-3 ml-1"
-            name="category_name_filter"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={filter.category_name_filter}
-            onChange={handleFilterChange}
-          >
-            <option value="">Income & Expense</option>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select>
-          <select
-            class="form-control rounded ml-1 col-2"
-            name="year_from_filter"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={filter.year_from_filter}
-            onChange={handleFilterChange}
-          >
-            <option value="">From Year</option>
-            {yearsAvailable.map((year) => (
-              <option value={year.years_available}>
-                {year.years_available}
-              </option>
-            ))}
-          </select>
-          <select
-            class="form-control rounded ml-1 col-2"
-            name="year_to_filter"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={filter.year_to_filter}
-            onChange={handleFilterChange}
-          >
-            <option value="">To Year</option>
-            {yearsAvailable.map((year) => (
-              <option value={year.years_available}>
-                {year.years_available}
-              </option>
-            ))}
-          </select>
-          <select
-            class="form-control col-2 mx-1"
-            name="postsPerPage"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={postsPerPage}
-            onChange={(e) => setPostsPerPage(e.target.value)}
-          >
-            <option value={5}>No. Trans (5)</option>
-            <option value={8}>No. Trans (8)</option>
-            <option value={10}>No. Trans (10)</option>
-            <option value={15}>No. Trans (15)</option>
-            <option value={20}>No. Trans (20)</option>
-          </select>
-        </div>
-        <div class="input-group rounded col-12 mt-3">
-          <input
-            type="number"
-            name="nominal_from_filter"
-            value={filter.nominal_from_filter}
-            class="form-control rounded col-3"
-            placeholder="From 100"
-            aria-label="Search"
-            aria-describedby="search-addon"
-            onChange={handleFilterChange}
-          />
-          <input
-            type="number"
-            name="nominal_to_filter"
-            value={filter.nominal_to_filter}
-            class="form-control rounded ml-1 col-3"
-            placeholder="To 100"
-            aria-label="Search"
-            aria-describedby="search-addon"
-            onChange={handleFilterChange}
-          />
-          <select
-            class="form-control rounded ml-1 col-2"
-            name="month_from_filter"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={filter.month_from_filter}
-            onChange={handleFilterChange}
-          >
-            <option value="">From Month</option>
-            {monthNames.map((month, index) => (
-              <option value={index + 1}>{month}</option>
-            ))}
-          </select>
-          <select
-            class="form-control rounded ml-1 col-2"
-            name="month_to_filter"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={filter.month_to_filter}
-            onChange={handleFilterChange}
-          >
-            <option value="">To Month</option>
-            {monthNames.map((month, index) => (
-              <option value={index + 1}>{month}</option>
-            ))}
-          </select>
-          <select
-            class="form-control col-2 mx-1"
-            name="sort"
-            aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-sm"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-          >
-            <option value="sort_date">Sort By (Date)</option>
-            <option value="sort_nominal">Sort By (Nominal)</option>
-            <option value="sort_details">Sort By (Details)</option>
-          </select>
-        </div>
-        <div class="input-group rounded col-10 mt-3">
-          <button
-            type="button"
-            className={
-              "btn " +
-              (ascDsc === "ascending" ? "btn-warning" : "btn-secondary")
-            }
-            onClick={(e) => {
-              if (ascDsc === "ascending") {
-                setAscDsc("descending");
-              } else {
-                setAscDsc("ascending");
+            <select
+              class="form-control rounded col-3 ml-1"
+              name="category_name_filter"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={filter.category_name_filter}
+              onChange={handleFilterChange}
+            >
+              <option value="">Income & Expense</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+            <select
+              class="form-control rounded ml-1 col-2"
+              name="year_from_filter"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={filter.year_from_filter}
+              onChange={handleFilterChange}
+            >
+              <option value="">From Year</option>
+              {yearsAvailable.map((year) => (
+                <option value={year.years_available}>
+                  {year.years_available}
+                </option>
+              ))}
+            </select>
+            <select
+              class="form-control rounded ml-1 col-2"
+              name="year_to_filter"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={filter.year_to_filter}
+              onChange={handleFilterChange}
+            >
+              <option value="">To Year</option>
+              {yearsAvailable.map((year) => (
+                <option value={year.years_available}>
+                  {year.years_available}
+                </option>
+              ))}
+            </select>
+            <select
+              class="form-control rounded col-2 mx-1"
+              name="postsPerPage"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={postsPerPage}
+              onChange={(e) => setPostsPerPage(e.target.value)}
+            >
+              <option value={5}>No. Trans (5)</option>
+              <option value={8}>No. Trans (8)</option>
+              <option value={10}>No. Trans (10)</option>
+              <option value={15}>No. Trans (15)</option>
+              <option value={20}>No. Trans (20)</option>
+            </select>
+          </div>
+          <div class="input-group rounded col-12 mt-3">
+            <input
+              type="number"
+              name="nominal_from_filter"
+              value={filter.nominal_from_filter}
+              class="form-control rounded col-3"
+              placeholder="From 0"
+              aria-label="Search"
+              aria-describedby="search-addon"
+              onChange={handleFilterChange}
+            />
+            <input
+              type="number"
+              name="nominal_to_filter"
+              value={filter.nominal_to_filter}
+              class="form-control rounded ml-1 col-3"
+              placeholder="To 100"
+              aria-label="Search"
+              aria-describedby="search-addon"
+              onChange={handleFilterChange}
+            />
+            <select
+              class="form-control rounded ml-1 col-2"
+              name="month_from_filter"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={filter.month_from_filter}
+              onChange={handleFilterChange}
+            >
+              <option value="">From Month</option>
+              {monthNames.map((month, index) => (
+                <option value={index + 1}>{month}</option>
+              ))}
+            </select>
+            <select
+              class="form-control rounded ml-1 col-2"
+              name="month_to_filter"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={filter.month_to_filter}
+              onChange={handleFilterChange}
+            >
+              <option value="">To Month</option>
+              {monthNames.map((month, index) => (
+                <option value={index + 1}>{month}</option>
+              ))}
+            </select>
+            <select
+              class="form-control rounded col-2 mx-1"
+              name="sort"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="sort_date">Sort By (Date)</option>
+              <option value="sort_nominal">Sort By (Nominal)</option>
+              <option value="sort_details">Sort By (Details)</option>
+            </select>
+          </div>
+          <div class="input-group rounded col-10 mt-3">
+            <button
+              type="button"
+              className={
+                "btn " +
+                (ascDsc === "ascending" ? "btn-warning" : "btn-secondary")
               }
-            }}
-          >
-            {ascDsc === "ascending" ? "ASC" : "DSC"}
-          </button>
-          <button
-            type="button"
-            className="btn mx-1 btn-danger"
-            onClick={(e) => {
-              setAscDsc("descending");
-              setPostsPerPage(10);
-              setSort("");
-              setFilter({
-                details_filter: "",
-                category_name_filter: "",
-                year_from_filter: "",
-                year_to_filter: "",
-                month_from_filter: "",
-                month_to_filter: "",
-                nominal_from_filter: "",
-                nominal_to_filter: "",
-              });
-            }}
-          >
-            Reset Filters
-          </button>
+              onClick={(e) => {
+                if (ascDsc === "ascending") {
+                  setAscDsc("descending");
+                } else {
+                  setAscDsc("ascending");
+                }
+              }}
+            >
+              {ascDsc === "ascending" ? "ASC" : "DSC"}
+            </button>
+            <button
+              type="button"
+              className="btn mx-1 btn-danger"
+              onClick={(e) => {
+                setAscDsc("descending");
+                setPostsPerPage(10);
+                setSort("");
+                setFilter({
+                  details_filter: "",
+                  category_name_filter: "",
+                  year_from_filter: "",
+                  year_to_filter: "",
+                  month_from_filter: "",
+                  month_to_filter: "",
+                  nominal_from_filter: "",
+                  nominal_to_filter: "",
+                });
+              }}
+            >
+              Reset Filters
+            </button>
+          </div>
         </div>
 
         <div className="row mt-4 container m-0 justify-content-center">

@@ -1,0 +1,6 @@
+.border {
+  border-width: 0.3vw !important;
+  padding-bottom: 10px;
+  border-color: black !important;
+  background: #343a40;
+}
