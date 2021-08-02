@@ -15,8 +15,8 @@ const Navbar = ({ loggedIn, name }) => {
               </div>
             </Link>
           </li>
-          <li class="nav-item active">
-            <div class="nav-link">{name}</div>
+          <li class="nav-item active mr-2">
+            <div class="nav-link text-dark rounded bg-white">{name}</div>
           </li>
           <button className="btn btn-danger" onClick={(e) => logout(e)}>
             Logout
