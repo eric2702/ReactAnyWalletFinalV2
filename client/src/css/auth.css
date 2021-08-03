@@ -6,12 +6,12 @@
 .login {
   background: #007bff;
   background: linear-gradient(to right, #0062e6, #33aeff);
-  height: 100vh;
+  height: 100%;
 }
 
 .register {
   background: red;
-  height: 100vh;
+  height: 100%;
 }
 
 .card-signin {

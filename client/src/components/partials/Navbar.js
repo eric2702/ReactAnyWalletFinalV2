@@ -7,43 +7,48 @@ const Navbar = ({ loggedIn, name }) => {
   function navbar() {
     if (loggedIn) {
       return (
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <div class="nav-link">
-                Home <span class="sr-only">(current)</span>
-              </div>
-            </Link>
-          </li>
-          <li class="nav-item active mr-2">
-            <div class="nav-link text-dark rounded bg-white">{name}</div>
-          </li>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <div class="nav-link">
+                  Home <span class="sr-only">(current)</span>
+                </div>
+              </Link>
+            </li>
+            <li class="nav-item active mr-2">
+              <div class="nav-link text-white">{name}</div>
+            </li>
+          </ul>
+          {/* <div class="nav-link text-white pl-0">{name}</div> */}
           <button className="btn btn-danger" onClick={(e) => logout(e)}>
             Logout
           </button>
-        </ul>
+        </div>
       );
     } else {
       return (
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <div class="nav-link">
-                Home <span class="sr-only">(current)</span>
-              </div>
-            </Link>
-          </li>
-          <li class="nav-item">
-            <Link to="/register" style={{ textDecoration: "none" }}>
-              <div class="nav-link">Sign Up</div>
-            </Link>
-          </li>
-          <li class="nav-item">
-            <Link to="/login" style={{ textDecoration: "none" }}>
-              <div class="nav-link">Sign In</div>
-            </Link>
-          </li>
-        </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <div class="nav-link">
+                  Home <span class="sr-only">(current)</span>
+                </div>
+              </Link>
+            </li>
+            <li class="nav-item">
+              <Link to="/register" style={{ textDecoration: "none" }}>
+                <div class="nav-link">Sign Up</div>
+              </Link>
+            </li>
+            <li class="nav-item">
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                <div class="nav-link">Sign In</div>
+              </Link>
+            </li>
+          </ul>
+        </div>
       );
     }
   }
@@ -73,8 +78,8 @@ const Navbar = ({ loggedIn, name }) => {
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        {/* <ul class="navbar-nav ml-auto">
+      {/* <div class="collapse navbar-collapse" id="navbarNav"> */}
+      {/* <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
             <Link to="/" style={{ textDecoration: "none" }}>
               <div class="nav-link">
@@ -93,8 +98,8 @@ const Navbar = ({ loggedIn, name }) => {
             </Link>
           </li>
         </ul> */}
-        {navbar()}
-      </div>
+      {/* </div> */}
+      {navbar()}
     </nav>
   );
 };
