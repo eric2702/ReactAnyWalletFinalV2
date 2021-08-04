@@ -59,8 +59,11 @@ const Register = () => {
       <Navbar />
       <div className="register">
         <div className="row justify-content-center mx-0">
-          <div className="col-xl-10 col-lg-12 col-md-9">
-            <div data-aos="fade-right" className="card o-hidden border-0 shadow-lg my-5">
+          <div className="col-xl-10 col-lg-11 col-md-9">
+            <div
+              data-aos="fade-right"
+              className="card o-hidden border-0 shadow-lg my-5"
+            >
               <div className="card-body p-0">
                 <div className="row">
                   <div className="col-lg-6 d-none d-lg-block bg py-5">
@@ -118,7 +121,9 @@ const Register = () => {
                             placeholder="Confirm Password"
                             required
                           />
-                          <label for="inputConfPassword">Confirm Password</label>
+                          <label for="inputConfPassword">
+                            Confirm Password
+                          </label>
                         </div>
 
                         <div className="form-label-group">

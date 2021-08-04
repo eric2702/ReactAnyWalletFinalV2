@@ -57,8 +57,11 @@ const Login = () => {
       <Navbar />
       <div className="login">
         <div className="row justify-content-center mx-0">
-          <div className="col-xl-10 col-lg-12 col-md-9">
-            <div data-aos="fade-right" className="card o-hidden border-0 shadow-lg my-5">
+          <div className="col-xl-10 col-lg-11 col-md-9">
+            <div
+              data-aos="fade-right"
+              className="card o-hidden border-0 shadow-lg my-5"
+            >
               <div className="card-body p-0">
                 <div className="row">
                   <div className="col-lg-6 d-none d-lg-block bg py-5">
@@ -77,7 +80,11 @@ const Login = () => {
                       </div>
                       <form className="form-signin" onSubmit={onSubmitForm}>
                         <div className="form-label-group">
-                          <input type="email" name="email" value={email} onChange={(e) => onChange(e)}
+                          <input
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => onChange(e)}
                             id="inputEmail"
                             className="form-control"
                             placeholder="Email address"
@@ -88,7 +95,11 @@ const Login = () => {
                         </div>
 
                         <div className="form-label-group">
-                          <input type="password" name="password" value={password} onChange={(e) => onChange(e)}
+                          <input
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => onChange(e)}
                             id="inputPassword"
                             className="form-control"
                             placeholder="Password"
@@ -96,12 +107,18 @@ const Login = () => {
                           />
                           <label for="inputPassword">Password</label>
                         </div>
-                        <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">
+                        <button
+                          className="btn btn-lg btn-primary btn-block text-uppercase"
+                          type="submit"
+                        >
                           Sign in
                         </button>
                         <hr className="my-4" />
                         <Link to="/register" style={{ textDecoration: "none" }}>
-                          <button className="btn btn-lg btn-google btn-block text-uppercase" type="submit">
+                          <button
+                            className="btn btn-lg btn-google btn-block text-uppercase"
+                            type="submit"
+                          >
                             <i className="fab mr-2"></i>
                             Sign Up
                           </button>
