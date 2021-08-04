@@ -53,7 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div style={{overflowY: "hidden"}}>
       <Navbar />
       <div className="login">
         <div className="row justify-content-center mx-0">

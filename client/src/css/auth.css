@@ -6,12 +6,12 @@
 .login {
   background: #007bff;
   background: linear-gradient(to right, #0062e6, #33aeff);
-  height: 100%;
+  height: 94.3vh;
 }
 
 .register {
   background: red;
-  height: 100%;
+  height: 94.3vh;
 }
 
 .bg {
