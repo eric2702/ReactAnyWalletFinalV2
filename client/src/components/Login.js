@@ -61,7 +61,7 @@ const Login = () => {
             <div data-aos="fade-right" className="card o-hidden border-0 shadow-lg my-5">
               <div className="card-body p-0">
                 <div className="row">
-                  <div className="col-lg-6 d-none d-lg-block bg">
+                  <div className="col-lg-6 d-none d-lg-block bg py-5">
                     <div className="p-5 mt-5">
                       <div className="text-center text-white">
                         <h1 className="card-title">AnyWallet</h1>
