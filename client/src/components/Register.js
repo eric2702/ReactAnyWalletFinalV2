@@ -62,7 +62,7 @@ const Register = () => {
           <div className="col-xl-10 col-lg-11 col-md-9">
             <div
               data-aos="fade-right"
-              className="card o-hidden border-0 shadow-lg my-5"
+              className="card card-signin o-hidden border-0 shadow-lg my-5"
             >
               <div className="card-body p-0">
                 <div className="row">
