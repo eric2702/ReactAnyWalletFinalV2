@@ -1,11 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { authActions } from "../../store/auth";
 
-const Navbar = ({ loggedIn, name }) => {
+const Navbar = ({ name }) => {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   function navbar() {
-    if (loggedIn) {
+    if (isAuth) {
       return (
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
@@ -16,9 +17,20 @@ const Navbar = ({ loggedIn, name }) => {
                 </div>
               </Link>
             </li>
-            <li class="nav-item active mr-2">
-              <div class="nav-link text-white">{name}</div>
+            <li class="nav-item active">
+              <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                <div class="nav-link">
+                  Dashboard <span class="sr-only">(current)</span>
+                </div>
+              </Link>
             </li>
+            {name ? (
+              <li class="nav-item active mr-2">
+                <div class="nav-link text-white">{name}</div>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
           {/* <div class="nav-link text-white pl-0">{name}</div> */}
           <button className="btn btn-danger" onClick={(e) => logout(e)}>

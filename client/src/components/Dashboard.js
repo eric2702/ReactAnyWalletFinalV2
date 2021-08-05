@@ -420,7 +420,7 @@ const Dashboard = () => {
   return (
     //AMOUNT
     <div className="dash-bg">
-      <Navbar loggedIn={true} name={name} />
+      <Navbar name={name} />
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-sm-3">
