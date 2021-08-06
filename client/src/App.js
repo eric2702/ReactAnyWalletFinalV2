@@ -14,6 +14,7 @@ import { authActions } from "./store/auth";
 import Home from "./components/Home";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import About from "./components/About";
 
 const axios = require("axios");
 
@@ -74,6 +75,9 @@ function App() {
           path="/dashboard"
           component={() => (isAuth ? <Dashboard /> : <Redirect to="/login" />)}
         />
+        <Route exact path="/about">
+          <About />
+        </Route>
       </Switch>
     </Suspense>
   );

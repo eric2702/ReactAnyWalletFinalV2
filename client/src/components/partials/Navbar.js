@@ -18,6 +18,13 @@ const Navbar = ({ name }) => {
               </Link>
             </li>
             <li class="nav-item active">
+              <Link to="/about" style={{ textDecoration: "none" }}>
+                <div class="nav-link">
+                  About <span class="sr-only">(current)</span>
+                </div>
+              </Link>
+            </li>
+            <li class="nav-item active">
               <Link to="/dashboard" style={{ textDecoration: "none" }}>
                 <div class="nav-link">
                   Dashboard <span class="sr-only">(current)</span>
@@ -46,6 +53,13 @@ const Navbar = ({ name }) => {
               <Link to="/" style={{ textDecoration: "none" }}>
                 <div class="nav-link">
                   Home <span class="sr-only">(current)</span>
+                </div>
+              </Link>
+            </li>
+            <li class="nav-item active">
+              <Link to="/about" style={{ textDecoration: "none" }}>
+                <div class="nav-link">
+                  About <span class="sr-only">(current)</span>
                 </div>
               </Link>
             </li>
@@ -111,6 +125,7 @@ const Navbar = ({ name }) => {
           </li>
         </ul> */}
       {/* </div> */}
+
       {navbar()}
     </nav>
   );

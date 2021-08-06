@@ -701,7 +701,7 @@ const Dashboard = () => {
               name="nominal_from_filter"
               value={filter.nominal_from_filter}
               class="form-control rounded col-3"
-              placeholder="From 0"
+              placeholder="MIN Nominal"
               aria-label="Search"
               aria-describedby="search-addon"
               onChange={handleFilterChange}
@@ -711,7 +711,7 @@ const Dashboard = () => {
               name="nominal_to_filter"
               value={filter.nominal_to_filter}
               class="form-control rounded ml-1 col-3"
-              placeholder="To 100"
+              placeholder="MAX Nominal"
               aria-label="Search"
               aria-describedby="search-addon"
               onChange={handleFilterChange}
@@ -770,7 +770,7 @@ const Dashboard = () => {
                 }
               }}
             >
-              {ascDsc === "ascending" ? "ASC" : "DSC"}
+              {ascDsc === "ascending" ? "↑≡" : "↓≡"}
             </button>
             <button
               type="button"
