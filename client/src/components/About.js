@@ -4,7 +4,7 @@ const About = () => {
   return (
     <div>
       <Navbar />
-      <section data-aos="fade-right" data-aos-anchor-placement="center-bottom">
+      <section data-aos="fade-right" data-aos-anchor-placement="top-bottom">
         <div class="container">
           <h1
             className="p-5 text-center font-weight-bold"
