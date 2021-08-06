@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { authActions } from "../store/auth";
 import Pagination from "./Pagination";
 import Navbar from "./partials/Navbar";
 import "../css/dash.css";
 const axios = require("axios");
 
 const Dashboard = () => {
-  // const dispatch = useDispatch();
-  // const logoutHandler = () => {
-  //   dispatch(authActions.logout());
-  // };
   const [name, setName] = useState("");
   const [dateString, setDateString] = useState("");
   const [yearsAvailable, setYearsAvailable] = useState([]);
@@ -399,13 +393,6 @@ const Dashboard = () => {
     }
   };
 
-  // const logout = (e) => {
-  //   e.preventDefault();
-  //   localStorage.removeItem("token");
-  //   logoutHandler();
-  //   toast.error("Logged out successfully");
-  // };
-
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -451,11 +438,9 @@ const Dashboard = () => {
       {/* TRANSACTIONS */}
       <div className="container mt-4">
         <div className="row col-12 m-0 p-0">
-          {/* <div className="col-sm-1"></div> */}
           <div className="col-sm-3">
             <p style={{ fontWeight: "bold" }}>{dateString}</p>
           </div>
-          {/* <div className="col-sm-3"></div> */}
           <div className="col-sm-9 d-flex justify-content-end">
             <button
               type="button"
@@ -515,16 +500,6 @@ const Dashboard = () => {
                                 Category
                               </p>
                               <div class="input-group input-group-sm m-0">
-                                {/* <input
-                                  type="number"
-                                  name="category_id"
-                                  className="form-control border-0"
-                                  aria-label="Sizing example input"
-                                  aria-describedby="inputGroup-sizing-sm"
-                                  placeholder="input category"
-                                  value={formData.category_id}
-                                  onChange={handleChange}
-                                /> */}
                                 <select
                                   class="form-control"
                                   name="category_id"
@@ -570,7 +545,6 @@ const Dashboard = () => {
                               <p className="card-title small font-weight-light m-0">
                                 Date
                               </p>
-                              {/* <span className="font-weight-bolder">{dateString}</span> */}
                               <input
                                 type="datetime-local"
                                 name="date_created_updated"
@@ -634,9 +608,6 @@ const Dashboard = () => {
               aria-describedby="search-addon"
               onChange={handleFilterChange}
             />
-            {/* <span class="input-group-text border-0" id="search-addon">
-            <i class="fas fa-search"></i>
-          </span> */}
             <select
               class="form-control rounded col-3 ml-1"
               name="category_name_filter"
@@ -942,7 +913,6 @@ const Dashboard = () => {
                                     <p className="card-title small font-weight-light m-0">
                                       Date
                                     </p>
-                                    {/* <span className="font-weight-bolder">{dateString}</span> */}
                                     <input
                                       type="datetime-local"
                                       name="date_created_updated_edit"
