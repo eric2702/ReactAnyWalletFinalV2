@@ -183,7 +183,6 @@ const Dashboard = () => {
           );
         });
       }
-      console.log(parseRes);
       if (filter.year_from_filter !== "") {
         parseRes = parseRes.filter(function (array) {
           return (
