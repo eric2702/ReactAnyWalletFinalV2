@@ -1,15 +1,37 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { authActions } from "../../store/auth";
 
-const Navbar = ({ name }) => {
+const Navbar = () => {
+  const [name, setName] = useState("");
+  async function getName() {
+    try {
+      const response = await axios.get("http://localhost:5000/dashboard/", {
+        headers: {
+          token: localStorage.token,
+        },
+      });
+
+      const parseRes = response.data;
+
+      setName(parseRes.name);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
+  useEffect(() => {
+    getName();
+  }, []);
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
   function navbar() {
     if (isAuth) {
       return (
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
+          <ul style={{ left: "0" }} class="navbar-nav ml-auto">
             <li class="nav-item active">
               <Link to="/" style={{ textDecoration: "none" }}>
                 <div class="nav-link">
@@ -31,18 +53,29 @@ const Navbar = ({ name }) => {
                 </div>
               </Link>
             </li>
-            {name ? (
-              <li class="nav-item active mr-2">
-                <div class="nav-link text-white">{name}</div>
-              </li>
-            ) : (
-              ""
-            )}
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {name}
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-right"
+                aria-labelledby="navbarDropdown"
+              >
+                <a onClick={(e) => logout(e)} class="dropdown-item" href="#">
+                  Logout
+                </a>
+              </div>
+            </li>
           </ul>
-          {/* <div class="nav-link text-white pl-0">{name}</div> */}
-          <button className="btn btn-danger" onClick={(e) => logout(e)}>
-            Logout
-          </button>
         </div>
       );
     } else {

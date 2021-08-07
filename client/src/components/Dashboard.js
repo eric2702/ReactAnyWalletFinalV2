@@ -8,7 +8,6 @@ const axios = require("axios");
 const Dashboard = () => {
   const [name, setName] = useState("");
   const [dateString, setDateString] = useState("");
-  const [yearsAvailable, setYearsAvailable] = useState([]);
   const monthNames = [
     "January",
     "February",
@@ -37,6 +36,7 @@ const Dashboard = () => {
   const [postsPerPage, setPostsPerPage] = useState(10);
   const [sort, setSort] = useState("date");
   const [ascDsc, setAscDsc] = useState("descending");
+  const [editMode, setEditMode] = useState(0);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = transactions.slice(indexOfFirstPost, indexOfLastPost);
@@ -62,10 +62,8 @@ const Dashboard = () => {
   const [filter, setFilter] = useState({
     details_filter: "",
     category_name_filter: "",
-    year_from_filter: "",
-    year_to_filter: "",
-    month_from_filter: "",
-    month_to_filter: "",
+    date_from_filter: "",
+    date_to_filter: "",
     nominal_from_filter: "",
     nominal_to_filter: "",
   });
@@ -139,17 +137,8 @@ const Dashboard = () => {
           },
         }
       );
-      const response_year = await axios.get(
-        "http://localhost:5000/dashboard/get_years",
-        {
-          headers: {
-            token: localStorage.token,
-          },
-        }
-      );
 
       var parseRes = response.data;
-      setYearsAvailable(response_year.data);
 
       if (filter.details_filter !== "") {
         parseRes = parseRes.filter(function (array) {
@@ -177,35 +166,19 @@ const Dashboard = () => {
           );
         });
       }
-      if (filter.year_from_filter !== "") {
+      if (filter.date_from_filter !== "") {
         parseRes = parseRes.filter(function (array) {
           return (
-            parseInt(array.date_created_updated_raw.substring(0, 4)) >=
-            filter.year_from_filter
+            array.date_created_updated_raw.substring(0, 10) >=
+            filter.date_from_filter
           );
         });
       }
-      if (filter.year_to_filter !== "") {
+      if (filter.date_to_filter !== "") {
         parseRes = parseRes.filter(function (array) {
           return (
-            parseInt(array.date_created_updated_raw.substring(0, 4)) <=
-            filter.year_to_filter
-          );
-        });
-      }
-      if (filter.month_from_filter !== "") {
-        parseRes = parseRes.filter(function (array) {
-          return (
-            parseInt(array.date_created_updated_raw.substring(5, 7)) >=
-            filter.month_from_filter
-          );
-        });
-      }
-      if (filter.month_to_filter !== "") {
-        parseRes = parseRes.filter(function (array) {
-          return (
-            parseInt(array.date_created_updated_raw.substring(5, 7)) <=
-            filter.month_to_filter
+            array.date_created_updated_raw.substring(0, 10) <=
+            filter.date_to_filter
           );
         });
       }
@@ -304,7 +277,7 @@ const Dashboard = () => {
       date_created_updated,
     };
     body.category_id = parseInt(category_id);
-    body.nominal = parseInt(nominal);
+    body.nominal = parseFloat(nominal);
 
     try {
       const response = await axios.post(
@@ -320,7 +293,7 @@ const Dashboard = () => {
       const parseRes = response.data;
 
       if (parseRes === "error_nominal") {
-        toast.error("Masukkan Nominal Lebih dari 0!");
+        toast.error("Masukkan Nominal Lebih dari 0 tanpa desimal!");
       } else if (parseRes === "error_data_type") {
         toast.error("Masukkan Data dengan Lengkap!");
       } else {
@@ -352,7 +325,7 @@ const Dashboard = () => {
       date_created_updated_edit,
     };
     body.category_id_edit = parseInt(category_id_edit);
-    body.nominal_edit = parseInt(nominal_edit);
+    body.nominal_edit = parseFloat(nominal_edit);
 
     try {
       const response = await axios.post(url_edit, body, {
@@ -364,7 +337,7 @@ const Dashboard = () => {
       const parseRes = response.data;
 
       if (parseRes === "error_nominal") {
-        toast.error("Masukkan Nominal Lebih dari 0!");
+        toast.error("Masukkan Nominal Lebih dari 0 tanpa desimal!");
       } else if (parseRes === "error_data_type") {
         toast.error("Masukkan Data dengan Lengkap!");
       } else {
@@ -407,9 +380,17 @@ const Dashboard = () => {
     //AMOUNT
     <div className="dash-bg">
       <Navbar name={name} />
-      <div className="container mt-5">
+      <div className="container mt-4 pl-0">
+        <div className="row col-12 m-0 p-0">
+          <div className="col-1"></div>
+          <div className="col-sm-3 pl-2 pl-sm-0">
+            <p style={{ fontWeight: "bold" }}>{dateString}</p>
+          </div>
+        </div>
+      </div>
+      <div className="container mt-3">
         <div className="row justify-content-center">
-          <div className="col-sm-3">
+          <div className="col-md-3">
             <div className="card bg-primary">
               <div className="card-body text-white">
                 <h5 className="card-title">Balance</h5>
@@ -417,7 +398,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-sm-3">
+          <div className="col-md-3">
             <div className="card bg-success">
               <div className="card-body text-white">
                 <h5 className="card-title">Income</h5>
@@ -425,7 +406,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-sm-3">
+          <div className="col-md-3">
             <div className="card bg-danger">
               <div className="card-body text-white">
                 <h5 className="card-title">Expense</h5>
@@ -438,32 +419,7 @@ const Dashboard = () => {
       {/* TRANSACTIONS */}
       <div className="container mt-4">
         <div className="row col-12 m-0 p-0">
-          <div className="col-sm-3">
-            <p style={{ fontWeight: "bold" }}>{dateString}</p>
-          </div>
           <div className="col-sm-9 d-flex justify-content-end">
-            <button
-              type="button"
-              className="btn btn-success mx-1"
-              data-toggle="modal"
-              data-target="#staticBackdrop"
-            >
-              Add Transaction
-            </button>
-            <button
-              type="button"
-              className="btn btn-info mx-1"
-              onClick={(e) => {
-                if (actionDisplay === "none") {
-                  setActionDisplay("");
-                } else {
-                  setActionDisplay("none");
-                }
-              }}
-            >
-              Edit
-            </button>
-
             <div
               className="modal fade"
               id="staticBackdrop"
@@ -525,6 +481,7 @@ const Dashboard = () => {
                               <div className="input-group input-group-sm m-0">
                                 <input
                                   type="number"
+                                  step="1000"
                                   name="nominal"
                                   className="form-control border-0"
                                   aria-label="Sizing example input"
@@ -596,140 +553,117 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div class="border mt-3 rounded">
-          <div class="input-group rounded col-12 mt-3">
-            <input
-              type="search"
-              name="details_filter"
-              value={filter.details_filter}
-              class="form-control rounded col-3"
-              placeholder="Search Details"
-              aria-label="Search"
-              aria-describedby="search-addon"
-              onChange={handleFilterChange}
-            />
-            <select
-              class="form-control rounded col-3 ml-1"
-              name="category_name_filter"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={filter.category_name_filter}
-              onChange={handleFilterChange}
-            >
-              <option value="">Income & Expense</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-            </select>
-            <select
-              class="form-control rounded ml-1 col-2"
-              name="year_from_filter"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={filter.year_from_filter}
-              onChange={handleFilterChange}
-            >
-              <option value="">From Year</option>
-              {yearsAvailable.map((year) => (
-                <option value={year.years_available}>
-                  {year.years_available}
-                </option>
-              ))}
-            </select>
-            <select
-              class="form-control rounded ml-1 col-2"
-              name="year_to_filter"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={filter.year_to_filter}
-              onChange={handleFilterChange}
-            >
-              <option value="">To Year</option>
-              {yearsAvailable.map((year) => (
-                <option value={year.years_available}>
-                  {year.years_available}
-                </option>
-              ))}
-            </select>
-            <select
-              class="form-control rounded col-2 mx-1"
-              name="postsPerPage"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={postsPerPage}
-              onChange={(e) => setPostsPerPage(e.target.value)}
-            >
-              <option value={5}>No. Trans (5)</option>
-              <option value={8}>No. Trans (8)</option>
-              <option value={10}>No. Trans (10)</option>
-              <option value={15}>No. Trans (15)</option>
-              <option value={20}>No. Trans (20)</option>
-            </select>
+        <div class="row justify-content-center">
+          <div class="border col-12 col-md-10 mt-3 rounded">
+            <div class="pl-0 input-group rounded col-12 mt-3">
+              <label
+                className="text-white col-2 col-md-1 d-flex justify-content-center"
+                htmlFor="date_from_filter"
+              >
+                From:{" "}
+              </label>
+              <input
+                type="date"
+                class="form-control rounded col-3"
+                name="date_from_filter"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm"
+                value={filter.date_from_filter}
+                onChange={handleFilterChange}
+              />
+              <input
+                type="number"
+                name="nominal_from_filter"
+                step="1000"
+                value={filter.nominal_from_filter}
+                class="form-control rounded col-4 ml-1"
+                placeholder="MIN Nominal"
+                aria-label="Search"
+                aria-describedby="search-addon"
+                onChange={handleFilterChange}
+              />
+              <select
+                class="form-control rounded col-4 ml-1"
+                name="category_name_filter"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm"
+                value={filter.category_name_filter}
+                onChange={handleFilterChange}
+              >
+                <option value="">Income & Expense</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
+            </div>
+            <div class="pl-0 input-group rounded col-12 mt-3">
+              <label
+                className="text-white col-2 col-md-1 d-flex justify-content-center"
+                htmlFor="date_from_filter"
+              >
+                To:{" "}
+              </label>
+              <input
+                type="date"
+                class="form-control rounded col-3"
+                name="date_to_filter"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm"
+                value={filter.date_to_filter}
+                onChange={handleFilterChange}
+              />
+
+              <input
+                type="number"
+                step="1000"
+                name="nominal_to_filter"
+                value={filter.nominal_to_filter}
+                class="form-control rounded ml-1 col-4"
+                placeholder="MAX Nominal"
+                aria-label="Search"
+                aria-describedby="search-addon"
+                onChange={handleFilterChange}
+              />
+              <input
+                type="search"
+                name="details_filter"
+                value={filter.details_filter}
+                class="form-control rounded col-4 ml-1"
+                placeholder="Search Details"
+                aria-label="Search"
+                aria-describedby="search-addon"
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div class="pl-0 input-group rounded col-12 mt-3">
+              <div class="col-2 col-md-1"></div>
+              <div class="input-group rounded col-10 col-md-11 pl-0">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={(e) => {
+                    setFilter({
+                      details_filter: "",
+                      category_name_filter: "",
+                      date_from_filter: "",
+                      date_to_filter: "",
+                      nominal_from_filter: "",
+                      nominal_to_filter: "",
+                    });
+                  }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="input-group rounded col-12 mt-3">
-            <input
-              type="number"
-              name="nominal_from_filter"
-              value={filter.nominal_from_filter}
-              class="form-control rounded col-3"
-              placeholder="MIN Nominal"
-              aria-label="Search"
-              aria-describedby="search-addon"
-              onChange={handleFilterChange}
-            />
-            <input
-              type="number"
-              name="nominal_to_filter"
-              value={filter.nominal_to_filter}
-              class="form-control rounded ml-1 col-3"
-              placeholder="MAX Nominal"
-              aria-label="Search"
-              aria-describedby="search-addon"
-              onChange={handleFilterChange}
-            />
-            <select
-              class="form-control rounded ml-1 col-2"
-              name="month_from_filter"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={filter.month_from_filter}
-              onChange={handleFilterChange}
-            >
-              <option value="">From Month</option>
-              {monthNames.map((month, index) => (
-                <option value={index + 1}>{month}</option>
-              ))}
-            </select>
-            <select
-              class="form-control rounded ml-1 col-2"
-              name="month_to_filter"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={filter.month_to_filter}
-              onChange={handleFilterChange}
-            >
-              <option value="">To Month</option>
-              {monthNames.map((month, index) => (
-                <option value={index + 1}>{month}</option>
-              ))}
-            </select>
-            <select
-              class="form-control rounded col-2 mx-1"
-              name="sort"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-sm"
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option value="sort_date">Sort By (Date)</option>
-              <option value="sort_nominal">Sort By (Nominal)</option>
-              <option value="sort_details">Sort By (Details)</option>
-            </select>
-          </div>
-          <div class="input-group rounded col-10 mt-3">
+        </div>
+        <div className="row pr-0 mr-0 mt-4 container">
+          <div className="col-md-1"></div>
+          <div className="col-md-5 d-flex">
             <button
               type="button"
               className={
-                "btn " +
+                "btn mx-1 " +
                 (ascDsc === "ascending" ? "btn-warning" : "btn-secondary")
               }
               onClick={(e) => {
@@ -742,28 +676,61 @@ const Dashboard = () => {
             >
               {ascDsc === "ascending" ? "↑≡" : "↓≡"}
             </button>
+            <select
+              class="form-control rounded mx-1"
+              name="sort"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="sort_date">Sort By (Date)</option>
+              <option value="sort_nominal">Sort By (Nominal)</option>
+              <option value="sort_details">Sort By (Details)</option>
+            </select>
+            <select
+              class="form-control rounded mx-1"
+              name="postsPerPage"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-sm"
+              value={postsPerPage}
+              onChange={(e) => setPostsPerPage(e.target.value)}
+            >
+              <option value={5}>Trans/Page (5)</option>
+              <option value={8}>Trans/Page (8)</option>
+              <option value={10}>Trans/Page (10)</option>
+              <option value={15}>Trans/Page (15)</option>
+              <option value={20}>Trans/Page (20)</option>
+            </select>
+          </div>
+          <div className="col-md-5 mt-2 mt-md-0 d-flex justify-content-end">
             <button
               type="button"
-              className="btn mx-1 btn-danger"
+              className="btn btn-success mx-1"
+              data-toggle="modal"
+              data-target="#staticBackdrop"
+            >
+              Add Transaction
+            </button>
+            <button
+              type="button"
+              className={
+                "btn mx-1 " + (editMode === 0 ? "btn-info" : "btn-secondary")
+              }
               onClick={(e) => {
-                setAscDsc("descending");
-                setPostsPerPage(10);
-                setSort("");
-                setFilter({
-                  details_filter: "",
-                  category_name_filter: "",
-                  year_from_filter: "",
-                  year_to_filter: "",
-                  month_from_filter: "",
-                  month_to_filter: "",
-                  nominal_from_filter: "",
-                  nominal_to_filter: "",
-                });
+                if (actionDisplay === "none") {
+                  setActionDisplay("");
+                  setEditMode(1);
+                } else {
+                  setActionDisplay("none");
+                  setEditMode(0);
+                }
               }}
             >
-              Reset Filters
+              {editMode === 0 ? "Edit" : "Cancel Edit"}
             </button>
           </div>
+          <div className="col-md-1"></div>
         </div>
 
         <div className="row mt-4 container m-0 justify-content-center">
@@ -774,10 +741,10 @@ const Dashboard = () => {
           >
             <thead className="thead-dark">
               <tr>
-                <th className="text-center">Details</th>
+                <th className="text-center">Date & Time</th>
                 <th className="text-center">Nominal</th>
                 <th className="text-center">Category</th>
-                <th className="text-center">Date & Time</th>
+                <th className="text-center">Details</th>
                 <th className="text-center" style={{ display: actionDisplay }}>
                   Action
                 </th>
@@ -786,14 +753,25 @@ const Dashboard = () => {
             <tbody>
               {currentPosts.map((transaction, index) => (
                 <tr key={index}>
-                  <td className="text-center">{transaction.details}</td>
-                  <td className="text-right">
-                    {formatRupiah(transaction.nominal)}
-                  </td>
-                  <td className="text-center">{transaction.category_name}</td>
                   <td className="text-center">
                     {transaction.date_created_updated}
                   </td>
+
+                  <td className="text-right">
+                    {formatRupiah(transaction.nominal)}
+                  </td>
+                  <td
+                    className={
+                      "text-center text-white " +
+                      (transaction.category_name === "Income"
+                        ? "bg-success"
+                        : "bg-danger")
+                    }
+                  >
+                    {transaction.category_name}
+                  </td>
+                  <td className="text-center">{transaction.details}</td>
+
                   <td
                     className="text-center"
                     style={{ display: actionDisplay }}
@@ -894,6 +872,7 @@ const Dashboard = () => {
                                       <input
                                         type="number"
                                         name="nominal_edit"
+                                        step="1000"
                                         className="form-control border-0"
                                         aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-sm"

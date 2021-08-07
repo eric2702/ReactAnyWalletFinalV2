@@ -27,7 +27,7 @@ exports.postTransaction = async (req, res, next) => {
     const { details, nominal, category_id, date_created_updated, user_id } =
       req.body;
 
-    if (nominal <= 0) {
+    if (nominal <= 0 || nominal.toString().includes(".")) {
       return res.json("error_nominal");
     }
 
@@ -46,19 +46,6 @@ exports.getTransaction = async (req, res, next) => {
   try {
     const transactions = await pool.query(
       "SELECT transaction_id, details, nominal, c.category_name, date_created_updated as date_created_updated_raw, to_char(date_created_updated, 'Day, dd Month yyyy, hh24:mi') as date_created_updated FROM transactions t JOIN categories c on (t.category_id = c.category_id) WHERE user_id = $1 ORDER BY t.date_created_updated DESC",
-      [req.user]
-    );
-    res.json(transactions.rows);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json("Server Error");
-  }
-};
-
-exports.getYears = async (req, res, next) => {
-  try {
-    const transactions = await pool.query(
-      "SELECT to_char(date_created_updated, 'YYYY') as years_available FROM transactions WHERE user_id = $1 GROUP BY years_available ORDER BY years_available DESC",
       [req.user]
     );
     res.json(transactions.rows);
@@ -92,7 +79,7 @@ exports.postEditTransaction = async (req, res, next) => {
       transaction_id_edit,
     } = req.body;
 
-    if (nominal_edit <= 0) {
+    if (nominal_edit <= 0 || nominal_edit.toString().includes(".")) {
       return res.json("error_nominal");
     }
 
