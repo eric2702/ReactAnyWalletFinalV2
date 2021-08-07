@@ -564,7 +564,7 @@ const Dashboard = () => {
               </label>
               <input
                 type="date"
-                class="form-control rounded col-3"
+                class="form-control rounded col-5 col-md-3"
                 name="date_from_filter"
                 aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-sm"
@@ -576,14 +576,14 @@ const Dashboard = () => {
                 name="nominal_from_filter"
                 step="1000"
                 value={filter.nominal_from_filter}
-                class="form-control rounded col-4 ml-1"
+                class="form-control rounded col-5 col-md-4 ml-1"
                 placeholder="MIN Nominal"
                 aria-label="Search"
                 aria-describedby="search-addon"
                 onChange={handleFilterChange}
               />
               <select
-                class="form-control rounded col-4 ml-1"
+                class="form-control rounded d-none d-md-block col-4 ml-1"
                 name="category_name_filter"
                 aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-sm"
@@ -604,7 +604,7 @@ const Dashboard = () => {
               </label>
               <input
                 type="date"
-                class="form-control rounded col-3"
+                class="form-control col-5 col-md-3 rounded col-3"
                 name="date_to_filter"
                 aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-sm"
@@ -617,7 +617,7 @@ const Dashboard = () => {
                 step="1000"
                 name="nominal_to_filter"
                 value={filter.nominal_to_filter}
-                class="form-control rounded ml-1 col-4"
+                class="form-control rounded ml-1 col-5 col-md-4"
                 placeholder="MAX Nominal"
                 aria-label="Search"
                 aria-describedby="search-addon"
@@ -627,12 +627,37 @@ const Dashboard = () => {
                 type="search"
                 name="details_filter"
                 value={filter.details_filter}
-                class="form-control rounded col-4 ml-1"
+                class="form-control rounded d-none d-md-block col-4 ml-1"
                 placeholder="Search Details"
                 aria-label="Search"
                 aria-describedby="search-addon"
                 onChange={handleFilterChange}
               />
+            </div>
+            <div class="pl-0 input-group rounded col-12 mt-3 mt-md-0">
+              <div class="col-2 col-md-1"></div>
+              <input
+                type="search"
+                name="details_filter"
+                value={filter.details_filter}
+                class="form-control d-md-none d-block rounded col-6"
+                placeholder="Search Details"
+                aria-label="Search"
+                aria-describedby="search-addon"
+                onChange={handleFilterChange}
+              />
+              <select
+                class="form-control d-md-none d-block col-6 rounded ml-1"
+                name="category_name_filter"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm"
+                value={filter.category_name_filter}
+                onChange={handleFilterChange}
+              >
+                <option value="">Income & Expense</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
             </div>
             <div class="pl-0 input-group rounded col-12 mt-3">
               <div class="col-2 col-md-1"></div>
