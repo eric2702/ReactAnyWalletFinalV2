@@ -18,7 +18,7 @@ const About = () => {
               <div className="p-5">
                 <img
                   className="img-fluid rounded-circle"
-                  src="assets/img/01.png"
+                  src="assets/img/01.jpg"
                   alt="..."
                 />
               </div>
@@ -41,7 +41,7 @@ const About = () => {
               <div className="p-5">
                 <img
                   className="img-fluid rounded-circle"
-                  src="assets/img/02.png"
+                  src="assets/img/02.jpg"
                   alt="..."
                 />
               </div>
@@ -64,7 +64,7 @@ const About = () => {
               <div className="p-5">
                 <img
                   className="img-fluid rounded-circle"
-                  src="assets/img/03.png"
+                  src="assets/img/03.jpg"
                   alt="..."
                 />
               </div>
@@ -88,7 +88,7 @@ const About = () => {
               <div className="p-5">
                 <img
                   className="img-fluid rounded-circle"
-                  src="assets/img/04.png"
+                  src="assets/img/04.jpg"
                   alt="..."
                 />
               </div>
@@ -111,7 +111,7 @@ const About = () => {
               <div className="p-5">
                 <img
                   className="img-fluid rounded-circle"
-                  src="assets/img/05.png"
+                  src="assets/img/05.jpg"
                   alt="..."
                 />
               </div>
