@@ -1,4 +1,4 @@
-header.masthead {
+.masthead {
   position: relative;
   overflow: hidden;
   padding-top: calc(7rem + 72px);
@@ -8,57 +8,133 @@ header.masthead {
   background-position: center center;
   background-attachment: scroll;
   background-size: cover;
+  height: 100%;
 }
-header.masthead .masthead-content {
+.masthead .masthead-content {
   z-index: 1;
   position: relative;
 }
-header.masthead .masthead-content .masthead-heading {
+.masthead .masthead-content .masthead-heading {
   font-size: 4rem;
 }
-header.masthead .masthead-content .masthead-subheading {
-  font-size: 2rem;
+.masthead .masthead-content .masthead-subheading {
+  font-size: 1rem;
 }
-header.masthead .bg-circle {
+.masthead .bg-circle {
   z-index: 0;
   position: absolute;
   border-radius: 100%;
   background: linear-gradient(0deg, #ee0979 0%, #ff6a00 100%);
 }
-header.masthead .bg-circle-1 {
+.masthead .bg-circle-1 {
   height: 90rem;
   width: 90rem;
   bottom: -55rem;
   left: -55rem;
 }
-header.masthead .bg-circle-2 {
+.masthead .bg-circle-2 {
   height: 50rem;
   width: 50rem;
   top: -25rem;
   right: -25rem;
 }
-header.masthead .bg-circle-3 {
+.masthead .bg-circle-3 {
   height: 20rem;
   width: 20rem;
   bottom: -10rem;
   right: 5%;
 }
-header.masthead .bg-circle-4 {
+.masthead .bg-circle-4 {
   height: 30rem;
   width: 30rem;
   top: -5rem;
   right: 35%;
 }
 
+.footer-top{
+  margin-top: 10vh !important; 
+}
+
+.footer-top .footer-contact {
+  margin-bottom: 30px;
+}
+
+.footer-top .footer-contact h3 {
+  font-size: 2rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.footer-top .footer-contact p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.footer-top h4 {
+  font-size: 1rem;
+  font-weight: bold;
+  position: relative;
+}
+
+.footer-top .footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-top .footer-links ul i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.footer-top .footer-links ul li {
+  display: flex;
+  align-items: center;
+}
+
+.footer-top .footer-links ul li:first-child {
+  padding-top: 0;
+}
+
+.footer-top .footer-links ul a {
+  transition: 0.3s;
+  display: inline-block;
+  line-height: 1;
+}
+
+.footer-top .footer-links ul a:hover {
+  text-decoration: none;
+}
+
+.footer-top .social-links a {
+  font-size: 1rem;
+  display: inline-block;
+  background: #fff;
+  line-height: 1;
+  padding: 8px 0;
+  margin-right: 4px;
+  border-radius: 50%;
+  text-align: center;
+  width: 36px;
+  height: 36px;
+  transition: 0.3s;
+}
+
+.footer-top .social-links a:hover {
+  background: #209dd8;
+  color: #fff;
+  text-decoration: none;
+}
+
 @media (min-width: 992px) {
-  header.masthead {
+  .masthead {
     padding-top: calc(10rem + 55px);
     padding-bottom: 10rem;
   }
-  header.masthead .masthead-content .masthead-heading {
+  .masthead .masthead-content .masthead-heading {
     font-size: 6rem;
   }
-  header.masthead .masthead-content .masthead-subheading {
+  .masthead .masthead-content .masthead-subheading {
     font-size: 4rem;
   }
 }
