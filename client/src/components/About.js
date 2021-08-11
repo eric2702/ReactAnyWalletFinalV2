@@ -27,7 +27,7 @@ const About = () => {
               <div className="p-5">
                 <h1 className="display-2">Eric</h1>
                 <h2>
-                  "There is beauty in simplicity"
+                  "There is beauty in simplicity."
                 </h2>
               </div>
             </div>
@@ -50,7 +50,7 @@ const About = () => {
               <div className="p-5">
                 <h1 className="display-2">Casey</h1>
                 <h2>
-                  "AnyWallet is a part of me"
+                  "AnyWallet is a part of me!"
                 </h2>
               </div>
             </div>
@@ -120,7 +120,7 @@ const About = () => {
               <div className="p-5">
                 <h1 className="display-2">Asep</h1>
                 <h2>
-                  "No more scraping your pocket for change at the end of the month"
+                  "No more scraping your pocket for change at the end of the month."
                 </h2>
               </div>
             </div>
