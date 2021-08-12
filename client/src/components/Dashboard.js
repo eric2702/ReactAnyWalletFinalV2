@@ -458,6 +458,7 @@ const Dashboard = () => {
                               <div class="input-group input-group-sm m-0">
                                 <select
                                   class="form-control"
+                                  style={{cursor:"pointer"}}
                                   name="category_id"
                                   aria-label="Sizing example input"
                                   aria-describedby="inputGroup-sizing-sm"
@@ -585,6 +586,7 @@ const Dashboard = () => {
               <select
                 class="form-control rounded d-none d-md-block col-4 ml-1"
                 name="category_name_filter"
+                style={{cursor:"pointer"}}
                 aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-sm"
                 value={filter.category_name_filter}
@@ -704,6 +706,7 @@ const Dashboard = () => {
             <select
               class="form-control rounded mx-1"
               name="sort"
+              style={{cursor:"pointer"}}
               aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-sm"
               value={sort}
@@ -716,6 +719,7 @@ const Dashboard = () => {
             <select
               class="form-control rounded mx-1"
               name="postsPerPage"
+              style={{cursor:"pointer"}}
               aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-sm"
               value={postsPerPage}

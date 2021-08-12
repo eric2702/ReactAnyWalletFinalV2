@@ -91,7 +91,7 @@ const Login = () => {
                             required
                             autofocus
                           />
-                          <label for="inputEmail">Email address</label>
+                          <label for="inputEmail" style={{cursor:"pointer"}}>Email address</label>
                         </div>
 
                         <div className="form-label-group">
@@ -105,7 +105,7 @@ const Login = () => {
                             placeholder="Password"
                             required
                           />
-                          <label for="inputPassword">Password</label>
+                          <label for="inputPassword" style={{cursor:"pointer"}}>Password</label>
                         </div>
                         <button
                           className="btn btn-lg btn-primary btn-block text-uppercase"
