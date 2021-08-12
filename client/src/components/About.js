@@ -34,7 +34,7 @@ const About = () => {
           </div>
         </div>
       </section>
-      <section data-aos="fade-left" data-aos-anchor-placement="center-bottom">
+      <section data-aos="fade-right" data-aos-anchor-placement="center-bottom">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6">
@@ -81,7 +81,7 @@ const About = () => {
         </div>
       </section>
 
-      <section data-aos="fade-left" data-aos-anchor-placement="center-bottom">
+      <section data-aos="fade-right" data-aos-anchor-placement="center-bottom">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6">
@@ -95,9 +95,9 @@ const About = () => {
             </div>
             <div className="col-lg-6">
               <div className="p-5">
-                <h1 className="display-2">Ilham</h1>
+                <h1 className="display-2">Asep</h1>
                 <h2>
-                  "Say goodbye to impulsive buying for all of us."
+                  "No more scraping your pocket for change at the end of the month."
                 </h2>
               </div>
             </div>
@@ -118,9 +118,9 @@ const About = () => {
             </div>
             <div className="col-lg-6 order-lg-1">
               <div className="p-5">
-                <h1 className="display-2">Asep</h1>
+                <h1 className="display-2">Ilham</h1>
                 <h2>
-                  "No more scraping your pocket for change at the end of the month."
+                  "Money management made simple. Track spending, manage bills & save money."
                 </h2>
               </div>
             </div>
